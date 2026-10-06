@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Universal ERP & SaaS Suite</title>
+<style>
+*{box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#f1f5f9;margin:0;padding:10px;font-size:12px;color:#0f172a}
+.controls,.card-box{max-width:1200px;margin:0 auto 15px auto;background:#fff;padding:12px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.flex-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px} .flex-row>*{flex:1;min-width:130px}
+input,select,textarea,button{padding:6px;border:1px solid #cbd5e1;border-radius:4px;font-size:12px;width:100%}
+button{cursor:pointer;font-weight:bold;color:#fff;border:none}
+.btn-green{background:#16a34a} .btn-blue{background:#2563eb} .btn-amber{background:#d97706} .btn-purple{background:#7c3aed} .btn-danger{background:#dc2626} .btn-dark{background:#1e293b} .btn-whatsapp{background:#25d366} 
+.btn-outline{background:transparent;border:1px solid #2563eb;color:#2563eb}
+.nav-tabs{display:flex;gap:3px;margin-bottom:10px;flex-wrap:wrap}
+.nav-tab-btn{flex:1;min-width:70px;padding:9px 2px;background:#e2e8f0;color:#334155;font-size:10.5px;font-weight:bold;border-radius:4px;border:none;cursor:pointer;text-align:center}
+.nav-tab-btn.active{background:#1e3a8a;color:#fff}
+.data-table{width:100%;border-collapse:collapse;margin-top:8px} .data-table th,.data-table td{border:1px solid #cbd5e1;padding:6px;text-align:left;font-size:11px} .data-table th{background:#f1f5f9;color:#1e293b}
+.data-table tfoot td{background:#e2e8f0;font-weight:bold;border-top:2px solid #0f172a}
+.form-box{background:#f8fafc;padding:12px;border:1px solid #cbd5e1;border-radius:6px;margin-bottom:10px}
+.sec-title{margin-top:0;color:#1e3a8a;border-bottom:2px solid #e2e8f0;padding-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.bold{font-weight:bold} .text-center{text-align:center} .text-right{text-align:right}
+
+/* Floating Draggable Buttons */
+.draggable-floating-btn{position:fixed;width:52px;height:52px;border-radius:50%;color:#fff;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:move;z-index:9998;border:3px solid #fff;user-select:none;touch-action:none;}
+#floatingMicBtn{bottom:25px;right:25px;background:#7c3aed;box-shadow:0 4px 15px rgba(124,58,237,0.5);}
+#floatingMicBtn.listening{background:#dc2626;}
+#floatingBotBtn{bottom:25px;right:85px;background:#2563eb;box-shadow:0 4px 15px rgba(37,99,235,0.5);}
+
+/* Floating Video Player */
+#floatingVideoWindow{position:fixed;top:100px;right:40px;width:340px;height:240px;background:#000;border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,0.5);z-index:99999;display:none;flex-direction:column;border:2px solid #2563eb;resize:both;overflow:hidden;min-width:260px;min-height:180px;}
+#floatingVideoHeader{background:#1e3a8a;color:#fff;padding:6px 10px;cursor:move;display:flex;justify-content:space-between;align-items:center;font-weight:bold;font-size:11px;user-select:none;}
+#floatingVideoIframe{width:100%;height:100%;border:none;flex:1;}
+
+/* Voice Review Bar */
+#voiceReviewBar{position:fixed;bottom:95px;right:25px;width:360px;background:#fff;border-radius:8px;box-shadow:0 6px 25px rgba(0,0,0,0.3);z-index:9999;display:none;flex-direction:column;border:2px solid #7c3aed;overflow:hidden;}
+.v-header{background:#7c3aed;color:#fff;padding:8px;display:flex;justify-content:space-between;align-items:center;font-weight:bold;font-size:11px}
+.v-body{padding:10px;background:#f8fafc;}
+.v-transcript{width:100%;min-height:50px;padding:6px;border:1px solid #cbd5e1;border-radius:4px;font-size:12px;font-weight:bold;color:#1e293b;resize:none;}
+
+/* Help Bot */
+#helpBotModal{position:fixed;bottom:95px;right:85px;width:340px;height:420px;background:#fff;border-radius:8px;box-shadow:0 6px 25px rgba(0,0,0,0.3);z-index:9999;display:none;flex-direction:column;border:2px solid #2563eb;overflow:hidden;}
+.bot-header{background:#2563eb;color:#fff;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;font-weight:bold;}
+.bot-body{flex:1;padding:10px;overflow-y:auto;background:#f8fafc;font-size:11.5px;}
+.bot-msg{margin-bottom:8px;padding:6px 10px;border-radius:6px;max-width:85%;line-height:1.4;}
+.bot-msg.ai{background:#e0f2fe;color:#0369a1;}
+.bot-msg.user{background:#2563eb;color:#fff;margin-left:auto;}
+.bot-footer{padding:8px;background:#fff;border-top:1px solid #cbd5e1;display:flex;gap:4px;}
+
+/* Visual Bar Graph */
+.chart-container{display:flex;align-items:flex-end;gap:20px;height:180px;padding:15px;background:#f8fafc;border:1px solid #cbd5e1;border-radius:6px;margin-top:10px}
+.chart-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end}
+.chart-bar{width:50px;border-radius:4px 4px 0 0;transition:height 0.4s ease;min-height:4px}
+.chart-label{font-size:11px;font-weight:bold;margin-top:6px;color:#334155}
+.chart-val{font-size:10px;font-weight:bold;margin-bottom:4px}
+
+/* Clean Invoice Sheet */
+.invoice-sheet{width:210mm;min-height:297mm;margin:0 auto 20px auto;background:#fff;border:1px solid #000;padding:8mm 10mm;box-shadow:0 4px 10px rgba(0,0,0,0.1);position:relative;page-break-after:always;display:flex;flex-direction:column;justify-content:space-between}
+.inv-header{text-align:center;border-bottom:1.5px solid #000;padding-bottom:6px;}
+.inv-header .copy-type{font-size:11px;font-weight:bold;color:#1e3a8a;border:1.2px solid #1e3a8a;display:inline-block;padding:2px 8px;border-radius:3px;margin-bottom:4px}
+.inv-header h1{margin:4px 0 2px 0;font-family:Verdana,sans-serif;font-weight:bold;letter-spacing:2px}
+.grid-3{display:grid;grid-template-columns:1.1fr 1.1fr 0.9fr;border-bottom:1.5px solid #000;}
+.border-right{border-right:1.5px solid #000} .p-2{padding:5px}
+table.inv-table{width:100%;border-collapse:collapse;margin-top:6px;}
+table.inv-table th,table.inv-table td{border:1px solid #000;padding:4px;font-size:11px}
+table.inv-table th{background:#f8fafc;text-align:center}
+.summary-grid{display:grid;grid-template-columns:1.2fr 0.8fr;border-top:1px solid #000;border-bottom:1.5px solid #000;}
+.bank-box{padding:6px;border-right:1.5px solid #000;font-size:10.5px}
+.totals-box table{width:100%;border-collapse:collapse} .totals-box td{padding:2px 4px;font-size:11px;border-bottom:1px solid #ddd}
+.footer-terms{display:grid;grid-template-columns:1.3fr 0.7fr;padding-top:6px;font-size:10px;}
+.sign-box{text-align:center;padding-top:12px}
+
+/* Combined Sticker & Gate-Pass Layout (A6 Printable) */
+#stickerGatepassArea{width:105mm;min-height:148mm;padding:8mm;border:2px solid #000;margin:0 auto;background:#fff;display:none;page-break-after:always;flex-direction:column;justify-content:space-between;}
+.stk-header{text-align:center;border-bottom:1.5px solid #000;padding-bottom:6px;}
+.stk-body{padding:10px 0;}
+.stk-gatepass-strip{border-top:2px dashed #000;padding-top:8px;position:relative;margin-top:12px;}
+.stk-cut-mark{position:absolute;top:-9px;left:8px;background:#fff;padding:0 4px;font-size:9px;font-weight:bold;}
+
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;display:none;align-items:center;justify-content:center}
+.modal-content{background:#fff;width:95%;max-width:550px;max-height:90vh;overflow-y:auto;padding:20px;border-radius:8px;}
+
+#stickerPrintArea, #multiPrintArea, #generalPrintArea, #thermalPrintArea{display:none}
+
+@media print{
+  body{background:#fff;margin:0;padding:0} 
+  .controls,.card-box,.no-print,.modal-overlay,#floatingMicBtn,#floatingBotBtn,#voiceReviewBar,#helpBotModal,#floatingVideoWindow{display:none!important}
+  body.printing-sticker-gp #allInvoicesWrap {display:none!important;}
+  body.printing-sticker-gp #stickerGatepassArea {display:flex!important;}
+  body.printing-thermal #allInvoicesWrap {display:none!important;}
+  body.printing-thermal #thermalPrintArea {display:block!important; width:76mm; margin:0; padding:2mm; font-size:10px; font-family:monospace;}
+  body.printing-general #allInvoicesWrap {display:none!important;}
+  body.printing-general #generalPrintArea {display:block!important;}
+  .invoice-sheet{box-shadow:none;margin:0;border:none;min-height:270mm;padding:5mm 8mm} 
+  input,textarea,select{border:none!important;background:transparent;padding:0!important;-webkit-appearance:none;appearance:none;resize:none}
+  @page{size:A4 portrait;margin:5mm}
+}
+</style>
+</head>
+<body>
+
+<!-- Combined Parcel Sticker & Gate-Pass Print Slip (A6 Size) -->
+<div id="stickerGatepassArea" class="no-print">
+  <div>
+    <div class="stk-header">
+      <h2 id="sgCompName" style="margin:0;font-size:18px;">SHREE SAGAR ENTERPRISES</h2>
+      <p style="margin:2px 0 0 0;font-size:11px;font-weight:bold;">PARCEL DISPATCH & SHIPPING LABEL</p>
+    </div>
+    <div class="stk-body">
+      <div style="font-size:11px;margin-bottom:4px;"><b>DELIVER TO:</b></div>
+      <div style="font-size:16px;font-weight:bold;color:#0f172a;" id="sgCustName">M/s Galaxy Advertisers</div>
+      <div style="font-size:12px;margin-top:4px;" id="sgCustAddress">Haridwar Colony, Haridwar</div>
+      <div style="font-size:12px;margin-top:4px;"><b>Phone:</b> <span id="sgCustPhone">7906477784</span></div>
+      <div style="margin-top:6px;font-size:11px;"><b>Invoice No:</b> <span id="sgInvNo">INV-1</span> | <b>Date:</b> <span id="sgDate">--</span></div>
+    </div>
+  </div>
+
+  <div class="stk-gatepass-strip">
+    <span class="stk-cut-mark">✂ फाड़कर गेट रिकॉर्ड में रखें (GATE CLEARANCE PASS)</span>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;">
+      <div>
+        <div style="font-size:12px;font-weight:bold;">GATE PASS # <span id="sgGpInvNo">1</span></div>
+        <div style="font-size:10px;">गाड़ी नं: <b id="sgGpVeh">--</b></div>
+        <div style="font-size:11px;color:#16a34a;"><b>कुल माल:</b> <span id="sgGpQty">0 Pcs</span></div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-family:monospace;font-size:18px;letter-spacing:1px;font-weight:bold;">|||| | ||| || |||||| |</div>
+        <div style="font-size:8px;font-weight:bold;">SECURITY BARCODE</div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:12px;font-size:9px;">
+      <div>डिस्पैच चेकर: OK</div>
+      <div style="border-top:1px solid #000;width:90px;text-align:center;">गार्ड हस्ताक्षर</div>
+    </div>
+  </div>
+</div>
+
+<!-- Draggable Video Player -->
+<div id="floatingVideoWindow" class="no-print">
+  <div id="floatingVideoHeader">
+    <span id="videoWindowTitle">🎬 SOP प्लेयर</span>
+    <button style="background:transparent;border:none;color:#fff;font-size:14px;cursor:pointer;" onclick="closeFloatingVideo()">✕</button>
+  </div>
+  <iframe id="floatingVideoIframe" allowfullscreen></iframe>
+</div>
+
+<!-- Draggable Floating Buttons -->
+<div id="floatingMicBtn" class="draggable-floating-btn no-print" onclick="toggleVoiceRecording()" title="Voice Action">🎤</div>
+<div id="floatingBotBtn" class="draggable-floating-btn no-print" onclick="toggleHelpBot()" title="AI Guide">🤖</div>
+
+<!-- Gemini Style Live Voice Box -->
+<div id="voiceReviewBar" class="no-print">
+  <div class="v-header">
+    <span id="vStatusText">🔴 सुन रहा हूँ (Live Transcribing...)</span>
+    <button style="background:transparent;border:none;color:#fff;font-size:13px;cursor:pointer;" onclick="closeVoiceReview()">✕</button>
+  </div>
+  <div class="v-body">
+    <textarea id="liveTranscriptInput" class="v-transcript" placeholder="आप जो बोलेंगे यहाँ दिखेगा..."></textarea>
+    <div style="display:flex;gap:6px;margin-top:8px;">
+      <button class="btn-dark" type="button" style="flex:1" onclick="pauseVoice()">⏸ रोकें / सुधारें</button>
+      <button class="btn-green" type="button" style="flex:1" onclick="confirmAndExecuteCommand()">🚀 रन करें</button>
+    </div>
+  </div>
+</div>
+
+<!-- Help AI Bot Window -->
+<div id="helpBotModal" class="no-print">
+  <div class="bot-header">
+    <span>🤖 सॉफ़्टवेयर गाइड</span>
+    <button style="background:transparent;border:none;color:#fff;font-size:14px;cursor:pointer;" onclick="toggleHelpBot()">✕</button>
+  </div>
+  <div class="bot-body" id="botChatArea">
+    <div class="bot-msg ai">नमस्ते! मैं आपका सॉफ़्टवेयर गाइड हूँ। आप बिलिंग, स्टॉक, वेंडर, कैब या गेट-पास के बारे में कुछ भी पूछ सकते हैं।</div>
+  </div>
+  <div class="bot-footer">
+    <input type="text" id="botInputText" placeholder="सवाल पूछें..." onkeydown="if(event.key==='Enter') sendHelpQuery()">
+    <button class="btn-blue" type="button" style="width:60px;" onclick="sendHelpQuery()">पूछें</button>
+  </div>
+</div>
+
+<!-- UNIVERSAL EDIT MODAL FOR ALL DEPARTMENTS -->
+<div id="universalEditModal" class="modal-overlay">
+  <div class="modal-content" style="max-width:480px">
+    <h3 class="sec-title" id="editModalTitle">✏️ एडिट रिकॉर्ड</h3>
+    <input type="hidden" id="editTargetType">
+    <input type="hidden" id="editTargetIndex">
+    <div id="editFieldsContainer"></div>
+    <div style="display:flex;gap:6px;margin-top:12px;">
+      <button class="btn-green" type="button" style="flex:1;" onclick="saveUniversalEditedRecord()">💾 सुरक्षित करें</button>
+      <button class="btn-danger" type="button" style="flex:1;" onclick="document.getElementById('universalEditModal').style.display='none'">✕ रद्द करें</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN MODAL (TENANT & SUPER-ADMIN) -->
+<div id="passwordModal" class="modal-overlay" style="display:none">
+  <div class="modal-content" style="max-width:400px;text-align:center">
+    <h2 style="color:#1e3a8a;margin-top:0">🔐 System Login</h2>
+    <p style="color:#64748b;font-size:12px;margin-bottom:12px">क्लाइंट आईडी और पासवर्ड दर्ज करें</p>
+    <input type="text" id="loginShopIdInput" placeholder="Shop / Client ID (e.g. MASTER या STUDIO)" style="font-size:14px;text-align:center;padding:8px;margin-bottom:8px;font-weight:bold;text-transform:uppercase;">
+    <input type="password" id="loginPassInput" placeholder="Password..." style="font-size:18px;text-align:center;padding:8px;margin-bottom:12px;letter-spacing:2px">
+    <button class="btn-green" type="button" style="padding:10px;font-size:15px;width:100%" onclick="verifyTenantLogin()">🔓 लॉगिन व सत्यापित करें</button>
+  </div>
+</div>
+
+<!-- TOP NAV -->
+<div class="controls no-print" id="mainNavArea">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;background:#e0f2fe;padding:6px 10px;border-radius:4px">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span id="roleBadge" style="background:#1e3a8a;color:#fff;padding:3px 8px;border-radius:3px;font-weight:bold;font-size:10.5px">Active Session</span>
+      <span style="font-weight:bold;color:#0369a1;" id="activeTenantNameDisplay">SHREE SAGAR ENTERPRISES</span>
+    </div>
+    <div style="display:flex;gap:6px">
+      <button class="btn-purple" type="button" style="padding:4px 8px;font-size:11px" onclick="switchSection('superadmin')">👑 सुपर-एडमिन</button>
+      <button class="btn-danger" type="button" onclick="logoutUser()" style="padding:4px 8px;font-size:11px">🔒 Logout / Switch</button>
+    </div>
+  </div>
+
+  <div class="nav-tabs" id="navTabsContainer">
+    <button type="button" class="nav-tab-btn active" id="tabBtnSale" onclick="switchSection('sale')">🧾 1. Billing</button>
+    <button type="button" class="nav-tab-btn" id="tabBtnCustomer" onclick="switchSection('customer')">👥 2. Customers</button>
+    <button type="button" class="nav-tab-btn" id="tabBtnVendor" onclick="switchSection('vendor')">🏢 3. Vendors</button>
+    <button type="button" class="nav-tab-btn" id="tabBtnStock" onclick="switchSection('stock')">🏭 4. Inventory</button>
+    <button type="button" class="nav-tab-btn" id="tabBtnMfg" onclick="switchSection('mfg')">⚙️ 5. Production</button>
+    <button type="button" class="nav-tab-btn" id="tabBtnLabour" onclick="switchSection('labour')">👷 6. Labour</button>
+    <button type="button" class="nav-tab-btn" id="tabBtnPurchase" onclick="switchSection('purchase')">📥 7. Purchase</button>
+    <button type="button" class="nav-tab-btn" id="tabBtnOrder" onclick="switchSection('order')">📦 8. PO</button>
+    <button type="button" class="nav-tab-btn" id="tabBtnExpense" onclick="switchSection('expense')">💸 9. Expenses</button>
+    <button type="button" class="nav-tab-btn" id="tabBtnCab" onclick="switchSection('cab')">🚕 10. Cab Fleet</button>
+    <button type="button" class="nav-tab-btn" id="tabBtnHistory" onclick="switchSection('history')">📁 11. Invoices</button>
+    <button type="button" class="nav-tab-btn" id="tabBtnReport" onclick="switchSection('report')">📊 12. GSTR-1</button>
+    <button type="button" class="nav-tab-btn" id="tabBtnDashboard" onclick="switchSection('dashboard')">📈 13. Dashboard</button>
+    <button type="button" class="nav-tab-btn" id="tabBtnSettings" onclick="switchSection('settings')" style="background:#0f172a;color:#fff">⚙️ 14. Setup</button>
+    <button type="button" class="nav-tab-btn" id="tabBtnSuperAdmin" onclick="switchSection('superadmin')" style="background:#7c3aed;color:#fff;display:none;">👑 सुपर-एडमिन</button>
+  </div>
+</div>
+
+<!-- ================= 1. BILLING SECTION ================= -->
+<div class="controls no-print" id="secSaleControls">
+  <div class="flex-row">
+    <div style="flex:1.5">
+      <label class="bold">Customer / Party Name:</label>
+      <input type="text" id="ctlCustName" list="customerListOptions" placeholder="पार्टी नाम या नकद ग्राहक..." oninput="onCustNameInput(this.value)" onblur="syncBillToShipToLive()" style="font-weight:bold;background:#e0f2fe">
+      <datalist id="customerListOptions"></datalist>
+    </div>
+    <div style="flex:1">
+      <label class="bold">Mobile No:</label>
+      <input type="text" id="ctlCustPhone" placeholder="10 अंकों का मोबाइल..." oninput="onCustPhoneInput(this.value)" onblur="syncBillToShipToLive()">
+    </div>
+    <div><label class="bold">Invoice No:</label><input type="text" id="ctlInvNo" value="1" oninput="syncFromControls()"></div>
+    <div><label class="bold">Date:</label><input type="date" id="ctlDate" onchange="syncDateFromControl()"></div>
+  </div>
+
+  <div class="flex-row form-box" style="background:#e0f2fe;border-color:#bae6fd">
+    <div style="font-weight:bold;color:#1e3a8a;align-self:center">🖨️ Bill Print Options:</div>
+    <div><label><input type="checkbox" id="chkShowEway" checked onchange="syncSlip()"> Show E-Way Bill</label></div>
+    <div><label><input type="checkbox" id="chkShowVeh" checked onchange="syncSlip()"> Show Vehicle No</label></div>
+    <div><label style="color:#7c3aed;font-weight:bold"><input type="checkbox" id="chkApplyRoundOff" checked onchange="calculateTotal()"> Apply Round Off</label></div>
+  </div>
+
+  <div class="flex-row form-box" style="background:#f0fdf4;border-color:#86efac">
+    <div><label class="bold">Flat Freight:</label><input type="number" id="ctlFreight" value="0" oninput="calculateTotal()"></div>
+    <div><label class="bold">Discount (%):</label><input type="number" id="ctlPartyDiscount" step="0.1" value="0" oninput="calculateTotal()"></div>
+    <div>
+      <label class="bold">GST Slab %:</label>
+      <select id="ctlGstRate" onchange="calculateTotal()" style="font-weight:bold;background:#fff">
+        <option value="18" selected>18%</option><option value="12">12%</option><option value="5">5%</option><option value="28">28%</option><option value="0">0%</option>
+      </select>
+    </div>
+    <div style="flex:0.6"><button class="btn-green" type="button" style="margin-top:14px" onclick="saveInvoiceToDB(true)">💾 Save Bill</button></div>
+  </div>
+  
+  <div class="flex-row" style="margin-top:8px; align-items:flex-end">
+    <div style="flex:1.5">
+      <label class="bold" style="color:#1e3a8a">🖨️ Print Mode & Copies:</label>
+      <select id="ctlCopyPrint" style="font-weight:bold;background:#fef08a;margin-bottom:4px" onchange="updateCopyHeader()">
+        <option value="recip">1. Original for Recipient (A4)</option>
+        <option value="trans">2. Duplicate for Transporter (A4)</option>
+        <option value="supp">3. Triplicate for Supplier (A4)</option>
+        <option value="all">📑 All 3 Copies Together (A4)</option>
+        <option value="thermal">🧾 80mm Thermal Receipt (POS)</option>
+      </select>
+    </div>
+    <div style="flex:1.5;display:flex;gap:5px;align-items:flex-end">
+      <button class="btn-dark" type="button" style="padding:10px;font-size:12px;flex:1" onclick="executePrint('bill')">🖨️ A4 INVOICE</button>
+      <button class="btn-blue" type="button" style="padding:10px;font-size:12px;flex:1.3" onclick="executePrint('sticker_gatepass')">🏷🛡️ स्टीकर + गेट-पास (A6)</button>
+      <button class="btn-whatsapp" type="button" style="padding:10px;font-size:12px;flex:1" onclick="sendViaWhatsAppBusiness()">💬 WHATSAPP</button>
+      <button class="btn-amber" type="button" style="padding:10px;font-size:12px;flex:0.8" onclick="resetNewInvoiceForm()">✨ New</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= INVOICE PRINT SHEET ================= -->
+<div id="allInvoicesWrap">
+  <div class="invoice-sheet" id="sheetRecip">
+    <div>
+      <div class="inv-header">
+        <div class="copy-type" id="hdrRecip">TAX INVOICE - ORIGINAL FOR RECIPIENT</div>
+        <h1 id="printCompName">SHREE SAGAR ENTERPRISES</h1>
+        <p id="printCompAddress" class="bold">HOUSE A-28, KAMLA COLONY, SHAMLI, U.P. 247776</p>
+        <p><b>GSTIN:</b> <span id="printCompGst">09AVEPM9133B1ZO</span> | <b>Email:</b> <span id="printCompEmail">anuj.malik0@gmail.com</span> | <b>Contact:</b> <span id="printCompPhone">989773231</span></p>
+      </div>
+      <div class="grid-3">
+        <div class="p-2 border-right">
+          <div class="bold">BILL TO:</div>
+          <input type="text" id="custNameInput" class="bold" value="CASH SALE" placeholder="Party Name">
+          <textarea id="custAddressInput" rows="2" placeholder="Party Address">Local Counter, Shamli</textarea>
+          <div>Phone: <input type="text" id="custPhoneInput" value=""></div>
+          <div>GSTIN: <input type="text" id="custGstInput" class="bold" style="width:140px;display:inline-block" value="URP"></div>
+          <div>State: <input type="text" id="custStateCodeInput" class="bold" value="09" oninput="calculateTotal()"></div>
+        </div>
+        <div class="p-2 border-right">
+          <div class="bold">SHIP TO:</div>
+          <input type="text" id="shipNameInput" class="bold" value="CASH SALE" placeholder="Consignee Name">
+          <textarea id="shipAddressInput" rows="2" placeholder="Shipping Address">Local Counter, Shamli</textarea>
+        </div>
+        <div class="p-2">
+          <table style="width:100%;font-size:10px">
+            <tr><td>Invoice No:</td><td><input type="text" id="invNoInput" class="bold" value="1"></td></tr>
+            <tr><td>Date:</td><td><input type="text" id="invDateInput" value=""></td></tr>
+            <tr id="printRowVeh"><td>Vehicle:</td><td><input type="text" id="vehNoInput" value=""></td></tr>
+            <tr id="printRowEway"><td>E-Way Bill:</td><td><input type="text" id="ewayNoInput" class="bold" value=""></td></tr>
+            <tr><td>Place of Sup:</td><td><input type="text" id="lblPlaceSupply" class="bold" value="09 - Uttar Pradesh"></td></tr>
+          </table>
+        </div>
+      </div>
+      <table class="inv-table" style="margin-top:6px">
+        <thead><tr><th>SL</th><th style="width:45%">Description of Goods</th><th>HSN</th><th>Qty</th><th>Rate</th><th>Disc%</th><th>Amount (₹)</th><th class="no-print">Del</th></tr></thead>
+        <tbody id="itemsBody">
+          <tr class="item-row">
+            <td class="text-center row-sl">1</td>
+            <td>
+              <select class="no-print inv-item-select" onchange="onSelectItemFromInv(this)" style="margin-bottom:2px;background:#f0fdf4"></select>
+              <input type="text" class="item-desc" placeholder="Product Description..." style="font-weight:bold;width:100%">
+            </td>
+            <td class="text-center"><input type="text" class="item-hsn" value="3506" style="text-align:center"></td>
+            <td class="text-center"><input type="number" class="item-qty" value="100" oninput="calculateTotal()" style="text-align:center"></td>
+            <td class="text-center"><input type="number" class="item-rate" value="14.98" step="0.01" oninput="calculateTotal()" style="text-align:center"></td>
+            <td class="text-center"><input type="number" class="item-disc" value="0" step="0.1" oninput="calculateTotal()" style="text-align:center"></td>
+            <td class="text-right bold item-amt">1498.00</td>
+            <td class="no-print text-center"><button class="btn-danger restricted-btn" type="button" onclick="deleteRow(this)">✕</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="no-print" style="padding:6px 0;">
+        <button type="button" class="btn-dark" onclick="addNewRow()">+ Add Row</button>
+      </div>
+    </div>
+
+    <div style="margin-top:auto;">
+      <div class="summary-grid">
+        <div class="bank-box" style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+              <div class="bold" style="color:#1e3a8a;font-size:11px">Bank Details & UPI:</div>
+              <div>Bank: <span id="printBankName">STATE BANK OF INDIA</span></div>
+              <div>A/C: <span id="printBankAc" class="bold">44317906112</span></div>
+              <div>IFSC: <span id="printBankIfsc">SBIN0010155</span> | Branch: <span id="printBankBranch">THANA BHAWAN</span></div>
+          </div>
+          <div style="text-align:center; padding-right:10px;">
+              <img id="upiQrCode" src="" alt="UPI QR" style="width:80px; height:80px; border:1px solid #ddd; padding:2px">
+              <div id="upiQrText" style="font-size:9px; font-weight:bold; margin-top:2px;">Scan & Pay ₹ <span id="qrPayAmt">0.00</span></div>
+          </div>
+        </div>
+        <div class="totals-box">
+          <table>
+            <tr><td class="bold">ITEMS TAXABLE:</td><td class="text-right bold" id="taxableAmount">0.00</td></tr>
+            <tr id="rowCgst"><td>CGST:</td><td class="text-right" id="cgstAmount">0.00</td></tr>
+            <tr id="rowSgst"><td>SGST:</td><td class="text-right" id="sgstAmount">0.00</td></tr>
+            <tr id="rowIgst" style="display:none"><td>IGST:</td><td class="text-right" id="igstAmount">0.00</td></tr>
+            <tr id="rowFreight" style="display:none"><td>Freight:</td><td class="text-right bold" id="freightAmount">0.00</td></tr>
+            <tr><td>Round off:</td><td class="text-right" id="roundOff">0.00</td></tr>
+            <tr style="background:#f8fafc"><td class="bold" style="font-size:13px;">GRAND TOTAL:</td><td class="text-right bold" id="payableAmount" style="font-size:15px;color:#1e3a8a">₹ 0.00</td></tr>
+          </table>
+        </div>
+      </div>
+      
+      <div class="footer-terms">
+        <div><b>Terms & Conditions:</b> <div>1. Payment within 15 days.<br>2. Subject to Shamli jurisdiction only.</div></div>
+        <div class="sign-box"><b id="printSignComp">For SHREE SAGAR ENTERPRISES</b><div style="margin-top:20px;border-top:1px dashed #444;width:160px;margin-left:auto;margin-right:auto">Authorized Signatory</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 2. CUSTOMERS SECTION ================= -->
+<div class="card-box no-print" id="secCustomer" style="display:none">
+  <div class="sec-title">
+    <h3>👥 Customers Directory</h3>
+    <button class="btn-dark" style="width:auto;padding:5px 12px" onclick="printSectionTable('customerTableWrap', 'Customer Directory')">🖨️ Print Customers</button>
+  </div>
+  <div class="form-box">
+    <div class="flex-row">
+      <input type="text" id="newCustName" placeholder="Party Name">
+      <input type="text" id="newCustPhone" placeholder="Phone Number">
+      <input type="text" id="newCustGst" placeholder="GSTIN (or URP)">
+      <input type="text" id="newCustStateCode" placeholder="State Code (09)" value="09">
+    </div>
+    <textarea id="newCustAddress" rows="2" placeholder="Full Address" style="margin-bottom:6px"></textarea>
+    <button class="btn-green" type="button" onclick="addNewCustomerAction()">💾 Save Customer</button>
+  </div>
+  <div id="customerTableWrap">
+    <table class="data-table">
+      <thead><tr><th>SL</th><th>Party Name</th><th>GSTIN</th><th>Phone</th><th>Address</th><th class="no-print">Action</th></tr></thead>
+      <tbody id="customerTableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ================= 3. VENDOR SECTION ================= -->
+<div class="card-box no-print" id="secVendor" style="display:none">
+  <div class="sec-title">
+    <h3>🏢 Vendors Management</h3>
+    <button class="btn-dark" style="width:auto;padding:5px 12px" onclick="printSectionTable('vendorTableWrap', 'Vendors Directory')">🖨️ Print Vendors</button>
+  </div>
+  <div class="form-box">
+    <div class="flex-row">
+      <input type="text" id="newVendName" placeholder="Vendor Firm Name">
+      <input type="text" id="newVendPhone" placeholder="Phone No">
+      <input type="text" id="newVendGst" placeholder="GSTIN">
+      <input type="text" id="newVendState" placeholder="State Code" value="09">
+    </div>
+    <textarea id="newVendAddress" rows="2" placeholder="Vendor Address" style="margin-bottom:6px"></textarea>
+    <button class="btn-purple" type="button" onclick="addNewVendorAction()">✔ Save Vendor</button>
+  </div>
+  <div id="vendorTableWrap">
+    <table class="data-table">
+      <thead><tr><th>SL</th><th>Vendor Name</th><th>Phone</th><th>GSTIN</th><th>Address</th><th class="no-print">Action</th></tr></thead>
+      <tbody id="vendorTableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ================= 4. INVENTORY SECTION ================= -->
+<div class="card-box no-print" id="secStock" style="display:none">
+  <div class="sec-title">
+    <h3>🏭 Master Inventory & Stock</h3>
+    <button class="btn-dark" style="width:auto;padding:5px 12px" onclick="printSectionTable('stockTableWrap', 'Inventory Stock Report')">🖨️ Print Stock</button>
+  </div>
+  <div class="form-box">
+    <div class="flex-row">
+      <select id="newInvType" style="flex:0.8"><option value="FG">Finished Goods</option><option value="RAW">Raw Material</option></select>
+      <input type="text" id="newInvName" placeholder="Item Name">
+      <input type="text" id="newInvHsn" placeholder="HSN" value="3506">
+      <input type="number" id="newInvRate" placeholder="Rate" value="10">
+      <input type="number" id="newInvStock" placeholder="Stock Qty" value="1000">
+      <button class="btn-dark" type="button" onclick="addNewInventoryItem()">✔ Add Item</button>
+    </div>
+  </div>
+  <div id="stockTableWrap">
+    <table class="data-table">
+      <thead><tr><th>SL</th><th>Type</th><th>Item Name</th><th>HSN</th><th>Rate (₹)</th><th>Stock Qty</th><th class="no-print">Action</th></tr></thead>
+      <tbody id="editableInventoryBody"></tbody>
+      <tfoot id="stockTableFoot"></tfoot>
+    </table>
+  </div>
+</div>
+
+<!-- ================= 5. PRODUCTION SECTION ================= -->
+<div class="card-box no-print" id="secMfg" style="display:none">
+  <div class="sec-title">
+    <h3 id="lblSectionMfgTitle">⚙️ Production & SOP</h3>
+    <button class="btn-dark" style="width:auto;padding:5px 12px" onclick="printSectionTable('mfgTableWrap', 'Daily Production Log')">🖨️ Print Production</button>
+  </div>
+  <div class="form-box">
+    <div class="flex-row">
+      <div style="flex:2"><label class="bold">Finished Good / Recipe Item:</label><input type="text" id="mfgFgItem" placeholder="e.g. Super Glue 20g / पनीर टिक्का"></div>
+      <div><label class="bold">Date:</label><input type="date" id="mfgDate"></div>
+      <div><label class="bold">Qty Produced:</label><input type="number" id="mfgFgQty" value="1000"></div>
+    </div>
+    <div class="flex-row" style="margin-top:8px;">
+      <div style="flex:2.5"><label class="bold" id="lblVideoSopInput">🎬 YouTube SOP / Recipe Video URL:</label><input type="text" id="mfgVideoUrl" placeholder="https://youtu.be/..."></div>
+      <div style="flex:1;display:flex;gap:4px;align-self:flex-end">
+        <button class="btn-amber" type="button" onclick="previewFloatingVideo(document.getElementById('mfgVideoUrl').value, document.getElementById('mfgFgItem').value)">▶ चलाएं</button>
+        <button class="btn-green" type="button" onclick="saveProductionEntry()">🚀 सेव करें</button>
+      </div>
+    </div>
+  </div>
+  <div id="mfgTableWrap">
+    <table class="data-table">
+      <thead><tr><th>Date</th><th>Item</th><th>Qty</th><th class="text-center">SOP Player</th><th class="no-print">Action</th></tr></thead>
+      <tbody id="mfgLogBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ================= 6. LABOUR REGISTER ================= -->
+<div class="card-box no-print" id="secLabour" style="display:none">
+  <div class="sec-title">
+    <h3>👷 Labour & Wages Register</h3>
+    <button class="btn-dark" style="width:auto;padding:5px 12px" onclick="printSectionTable('labourTableWrap', 'Labour & Wages Summary')">🖨️ Print Labour</button>
+  </div>
+  <div class="form-box">
+    <div class="flex-row">
+      <input type="text" id="labourName" placeholder="Worker Name">
+      <input type="text" id="labourPhone" placeholder="Mobile Number">
+      <input type="number" id="labourDailyWage" placeholder="Daily Wage (₹)" value="500">
+      <button class="btn-amber" type="button" onclick="addNewLabourAction()">✔ Save Worker</button>
+    </div>
+  </div>
+  <div id="labourTableWrap">
+    <table class="data-table">
+      <thead><tr><th>SL</th><th>Worker Name</th><th>Mobile</th><th>Wage/Day</th><th class="text-right">Days</th><th class="text-right">Salary</th><th class="text-right">Advance</th><th class="text-right">Balance Due</th><th class="no-print">Action</th></tr></thead>
+      <tbody id="labourSummaryTableBody"></tbody>
+      <tfoot id="labourTableFoot"></tfoot>
+    </table>
+  </div>
+</div>
+
+<!-- ================= 7. PURCHASE ================= -->
+<div class="card-box no-print" id="secPurchase" style="display:none">
+  <div class="sec-title">
+    <h3>📥 Purchase Invoices & Inward ITC</h3>
+    <button class="btn-dark" style="width:auto;padding:5px 12px" onclick="printSectionTable('purchaseTableWrap', 'Inward Purchase Register')">🖨️ Print Purchase</button>
+  </div>
+  <div class="form-box">
+    <div class="flex-row">
+      <select id="purSupplier" style="flex:1.5;font-weight:bold;"></select>
+      <input type="text" id="purBillNo" placeholder="Bill No">
+      <input type="date" id="purDate">
+      <input type="number" id="purAmount" placeholder="Total Bill Amount (₹)">
+      <select id="purPayMode"><option value="Credit">Credit</option><option value="Cash">Cash</option></select>
+    </div>
+    <button class="btn-purple" type="button" style="margin-top:8px;" onclick="savePurchaseAction()">✔ Save Purchase</button>
+  </div>
+  <div id="purchaseTableWrap">
+    <table class="data-table">
+      <thead><tr><th>Date</th><th>Supplier</th><th>Bill No</th><th>Mode</th><th class="text-right">Total Cost</th><th class="no-print">Action</th></tr></thead>
+      <tbody id="purchaseHistoryBody"></tbody>
+      <tfoot id="purchaseTableFoot"></tfoot>
+    </table>
+  </div>
+</div>
+
+<!-- ================= 8. PO (PURCHASE ORDERS) ================= -->
+<div class="card-box no-print" id="secOrder" style="display:none">
+  <div class="sec-title">
+    <h3>📦 Purchase Orders (PO)</h3>
+    <button class="btn-dark" style="width:auto;padding:5px 12px" onclick="printSectionTable('poTableWrap', 'Purchase Orders Summary')">🖨️ Print PO</button>
+  </div>
+  <div class="form-box">
+    <div class="flex-row">
+      <select id="poVendorSelect" style="flex:1.5;background:#fff;" onchange="onPoVendorChange(this)"></select>
+      <input type="text" id="poVendorPhone" placeholder="WhatsApp No">
+      <input type="date" id="poDate">
+    </div>
+    <div style="overflow-x:auto;margin-top:8px;">
+      <table class="data-table" id="currentPoItemsTable">
+        <thead><tr><th>SL</th><th>Item Name</th><th>Qty</th><th>Unit</th><th>Rate</th><th class="no-print">Del</th></tr></thead>
+        <tbody id="poItemsBody">
+          <tr class="po-item-row">
+            <td class="text-center po-sl">1</td>
+            <td><input type="text" class="po-item-name" value="Casto Bond Raw Bottle" style="font-weight:bold;"></td>
+            <td class="text-center"><input type="number" class="po-qty" value="500"></td>
+            <td class="text-center"><select class="po-unit"><option>Pcs</option><option>KG</option></select></td>
+            <td class="text-center"><input type="number" class="po-rate" value="10"></td>
+            <td class="text-center no-print"><button class="btn-danger" type="button" onclick="this.closest('tr').remove();">✕</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:10px;">
+      <button class="btn-green" type="button" style="flex:1" onclick="savePurchaseOrder()">💾 Save PO</button>
+      <button class="btn-blue" type="button" style="flex:1" onclick="saveAndSendMultiplePO()">💬 Send WhatsApp</button>
+    </div>
+  </div>
+  <div id="poTableWrap">
+    <table class="data-table">
+      <thead><tr><th>Date</th><th>Vendor</th><th>Items/Total</th><th class="no-print">Action</th></tr></thead>
+      <tbody id="poHistoryBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ================= 9. ADVANCED EXPENSES & SOURCES ================= -->
+<div class="card-box no-print" id="secExpense" style="display:none">
+  <div class="sec-title">
+    <h3>💸 Expenses & Payment Source Tracker</h3>
+    <button class="btn-dark" style="width:auto;padding:5px 12px" onclick="printSectionTable('expenseTableWrap', 'Company Expense Log')">🖨️ Print Expenses</button>
+  </div>
+  <div class="form-box" style="background:#fef2f2;border-color:#fca5a5">
+    <div class="flex-row">
+      <div><label class="bold">Date:</label><input type="date" id="expDate"></div>
+      <div style="flex:1.5"><label class="bold">Purpose / Details:</label><input type="text" id="expDesc" placeholder="e.g. Raw Material, Petrol, Chai"></div>
+      <div><label class="bold">Amount (₹):</label><input type="number" id="expAmount" value="0"></div>
+      <div>
+        <label class="bold">Paid Through (Payment Source):</label>
+        <select id="expPaymentSource" style="font-weight:bold;background:#fff"></select>
+      </div>
+    </div>
+    <button class="btn-danger" type="button" onclick="saveExpense()" style="margin-top:10px">💾 Save Expense Entry</button>
+  </div>
+  <div id="expenseTableWrap">
+    <table class="data-table">
+      <thead><tr><th>Date</th><th>Purpose</th><th>Source / Card</th><th class="text-right">Amount (₹)</th><th class="no-print">Action</th></tr></thead>
+      <tbody id="expenseTableBody"></tbody>
+      <tfoot id="expenseTableFoot"></tfoot>
+    </table>
+  </div>
+</div>
+
+<!-- ================= 10. CAB FLEET WITH DISPATCH & ROUTE ASSIGNMENT ================= -->
+<div class="card-box no-print" id="secCab" style="display:none">
+  <div class="sec-title">
+    <h3>🚕 Cab Fleet, Driver Dispatch & Route Logistics</h3>
+    <button class="btn-dark" style="width:auto;padding:5px 12px" onclick="printSectionTable('cabTableWrap', 'Commercial Cab Earning & Fleet Log')">🖨️ Print Cab Log</button>
+  </div>
+  
+  <div class="form-box">
+    <h4 style="margin:0 0 6px 0;color:#0369a1;">➕ Add Driver to Fleet</h4>
+    <div class="flex-row">
+      <input type="text" id="newDriverName" placeholder="Driver Name">
+      <input type="text" id="newDriverVeh" placeholder="Vehicle No (UP 19 AT 7903)">
+      <input type="text" id="newDriverPhone" placeholder="Driver Mobile No">
+      <button class="btn-dark" type="button" onclick="addNewDriverToFleet()">✔ ड्राइवर जोड़ें</button>
+    </div>
+  </div>
+
+  <div class="form-box" style="background:#eff6ff;border-color:#bfdbfe;">
+    <h4 style="margin:0 0 6px 0;color:#1e40af;">📍 ड्राइवर को रूट व ड्यूटी भेजें (Assign Route & WhatsApp)</h4>
+    <div class="flex-row">
+      <div>
+        <label class="bold">ड्राइवर चुनें:</label>
+        <select id="cabDispatchDriverSelect" onchange="syncDriverPhoneForDispatch()"></select>
+      </div>
+      <div style="flex:1.5">
+        <label class="bold">रूट / पिकअप-ड्रॉप लोकेशन:</label>
+        <input type="text" id="cabRouteDetails" placeholder="उदा. शामली से दिल्ली IGI एयरपोर्ट T3">
+      </div>
+      <div>
+        <label class="bold">तारीख व समय:</label>
+        <input type="text" id="cabReportingTime" placeholder="उदा. आज रात 11:00 PM">
+      </div>
+      <div style="flex:0.8;align-self:flex-end;">
+        <button class="btn-whatsapp" type="button" onclick="sendRouteToDriverWhatsApp()">📲 सेंड रूट व्हाट्सएप</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-box" style="background:#f0fdf4;">
+    <h4 style="margin:0 0 6px 0;color:#16a34a;">📅 Daily Earning Entry (Platform / Custom B2B Bill)</h4>
+    <div class="flex-row">
+      <div><label class="bold">Date:</label><input type="date" id="cabDate"></div>
+      <div>
+        <label class="bold">Platform / Bill Type:</label>
+        <select id="cabPlatform">
+          <option value="Uber India" data-gst="07AABCU9145Q1ZS">Uber India (Delhi GST: 07AABCU9145Q1ZS)</option>
+          <option value="Ola Cabs" data-gst="07AAFCO2418M1ZT">Ola Cabs (Delhi GST)</option>
+          <option value="Rapido" data-gst="07AAJCR1234Q1Z5">Rapido</option>
+          <option value="Custom B2B Invoice" data-gst="09AVEPM9133B1ZO">Custom B2B Invoice (पक्का बिल)</option>
+        </select>
+      </div>
+      <div><label class="bold">Driver / Car:</label><select id="cabDriverSelect"></select></div>
+      <div><label class="bold">Earnings (₹):</label><input type="number" id="cabEarnings" value="0"></div>
+    </div>
+    <div class="flex-row" style="margin-top:6px;">
+      <div><label class="bold">Fuel (₹):</label><input type="number" id="cabFuel" value="0"></div>
+      <div><label class="bold">Toll (₹):</label><input type="number" id="cabToll" value="0"></div>
+      <div><label class="bold">State Tax / Exp (₹):</label><input type="number" id="cabStateTax" value="0"></div>
+      <div style="align-self:flex-end"><button class="btn-green" type="button" onclick="saveCabLogEntry()">💾 Save Cab Entry</button></div>
+    </div>
+  </div>
+
+  <div id="cabTableWrap">
+    <table class="data-table">
+      <thead><tr><th>Date</th><th>Platform & GSTIN</th><th>Driver / Veh</th><th class="text-right">Earnings</th><th class="text-right">Expense</th><th class="text-right">Net Profit</th><th class="no-print">Action</th></tr></thead>
+      <tbody id="cabTableBody"></tbody>
+      <tfoot id="cabTableFoot"></tfoot>
+    </table>
+  </div>
+</div>
+
+<!-- ================= 11. INVOICE HISTORY ================= -->
+<div class="card-box no-print" id="secHistory" style="display:none">
+  <div class="sec-title">
+    <h3>📁 Saved Invoices Directory</h3>
+    <button class="btn-dark" style="width:auto;padding:5px 12px" onclick="printSectionTable('historyTableWrap', 'Invoices Register')">🖨️️ Print Invoices</button>
+  </div>
+  <div id="historyTableWrap">
+    <table class="data-table">
+      <thead><tr><th>Inv No</th><th>Date</th><th>Customer</th><th class="text-right">Taxable</th><th class="text-right">Total Amount</th><th>Status</th><th class="no-print">Action</th></tr></thead>
+      <tbody id="historyBodyFull"></tbody>
+      <tfoot id="historyTableFoot"></tfoot>
+    </table>
+  </div>
+</div>
+
+<!-- ================= 12. GSTR-1 REPORT WITH RESTORED SUMMARY & QUICK FILTERS ================= -->
+<div class="card-box no-print" id="secReport" style="display:none">
+  <div class="sec-title">
+    <h3>📊 GSTR-1 Sales & Tax Summary</h3>
+    <div style="display:flex;gap:5px;">
+      <button class="btn-dark" type="button" style="padding:6px 12px" onclick="printSectionTable('gstrTableWrap', 'GSTR-1 Monthly Tax Return')">🖨️ Print GSTR-1</button>
+      <button class="btn-amber" type="button" style="padding:6px 12px" onclick="exportGstrJSON()">⬇ Export JSON</button>
+    </div>
+  </div>
+
+  <div class="flex-row form-box" style="align-items:flex-end">
+    <div style="flex:3">
+      <label class="bold" style="color:#1e3a8a">Quick Date Filters:</label><br>
+      <button class="btn-outline" type="button" style="width:auto;padding:4px 8px;margin-right:4px;" onclick="setGstrDates('this_month')">This Month</button>
+      <button class="btn-outline" type="button" style="width:auto;padding:4px 8px;margin-right:4px;" onclick="setGstrDates('last_month')">Last Month</button>
+      <button class="btn-outline" type="button" style="width:auto;padding:4px 8px;margin-right:4px;" onclick="setGstrDates('quarter')">This Quarter</button>
+      <button class="btn-outline" type="button" style="width:auto;padding:4px 8px;" onclick="setGstrDates('fy')">Fin. Year</button>
+    </div>
+    <div><label class="bold">From Date:</label><input type="date" id="gstrFrom"></div>
+    <div><label class="bold">To Date:</label><input type="date" id="gstrTo"></div>
+    <div><button class="btn-blue" type="button" onclick="generateGstReport()">🔍 Filter Data</button></div>
+  </div>
+
+  <div id="gstrTableWrap">
+    <table class="data-table">
+      <thead><tr><th>Bill No</th><th>Date</th><th>Customer</th><th>GSTIN</th><th class="text-right">Taxable</th><th class="text-right">CGST</th><th class="text-right">SGST</th><th class="text-right">Total</th></tr></thead>
+      <tbody id="reportTableBody"></tbody>
+      <tfoot id="reportTableFoot"></tfoot>
+    </table>
+  </div>
+</div>
+
+<!-- ================= 13. DASHBOARD ================= -->
+<div class="card-box no-print" id="secDashboard" style="display:none">
+  <div class="sec-title">
+    <h3>📈 Business Analytics</h3>
+    <button class="btn-dark" style="width:auto;padding:5px 12px" onclick="window.print()">🖨️ Print Dashboard</button>
+  </div>
+  <div class="flex-row" style="margin-bottom:15px">
+    <div style="border:2px solid #16a34a;background:#f0fdf4;padding:12px;text-align:center;flex:1"><h4 style="color:#16a34a;margin:0">Total Sales</h4><div style="font-size:18px;font-weight:bold" id="dashTotalSales">₹ 0.00</div></div>
+    <div style="border:2px solid #2563eb;background:#eff6ff;padding:12px;text-align:center;flex:1"><h4 style="color:#2563eb;margin:0">Cab Earnings</h4><div style="font-size:18px;font-weight:bold" id="dashTotalCab">₹ 0.00</div></div>
+    <div style="border:2px solid #dc2626;background:#fef2f2;padding:12px;text-align:center;flex:1"><h4 style="color:#dc2626;margin:0">Total Expenses</h4><div style="font-size:18px;font-weight:bold" id="dashTotalExp">₹ 0.00</div></div>
+    <div style="border:2px solid #7c3aed;background:#f5f3ff;padding:12px;text-align:center;flex:1"><h4 style="color:#7c3aed;margin:0">Net Profit</h4><div style="font-size:18px;font-weight:bold" id="dashNetProfit">₹ 0.00</div></div>
+  </div>
+  <div class="chart-container">
+    <div class="chart-bar-wrap"><div class="chart-val" id="barValSales">₹0</div><div class="chart-bar" id="barHeightSales" style="background:#16a34a;"></div><div class="chart-label">Sales</div></div>
+    <div class="chart-bar-wrap"><div class="chart-val" id="barValCab">₹0</div><div class="chart-bar" id="barHeightCab" style="background:#2563eb;"></div><div class="chart-label">Transport</div></div>
+    <div class="chart-bar-wrap"><div class="chart-val" id="barValExp">₹0</div><div class="chart-bar" id="barHeightExp" style="background:#dc2626;"></div><div class="chart-label">Expense</div></div>
+    <div class="chart-bar-wrap"><div class="chart-val" id="barValProfit">₹0</div><div class="chart-bar" id="barHeightProfit" style="background:#7c3aed;"></div><div class="chart-label">Profit</div></div>
+  </div>
+</div>
+
+<!-- ================= 14. SETUP / SETTINGS ================= -->
+<div class="card-box no-print" id="secSettings" style="display:none">
+  <div class="form-box">
+    <h4 style="margin:0 0 10px 0;color:#1e3a8a">🏢 Business Profile</h4>
+    <div class="flex-row">
+      <div style="flex:2"><label class="bold">Company Name:</label><input type="text" id="setCompName"></div>
+      <div><label class="bold">GSTIN:</label><input type="text" id="setCompGst"></div>
+      <div><label class="bold">State Code:</label><input type="text" id="setCompState" value="09"></div>
+    </div>
+    <div class="flex-row" style="margin-top:6px">
+      <div style="flex:2"><label class="bold">Address:</label><input type="text" id="setCompAddress"></div>
+      <div><label class="bold">Phone:</label><input type="text" id="setCompPhone"></div>
+      <div><label class="bold">UPI ID:</label><input type="text" id="setUpiId" placeholder="989773231@sbi"></div>
+    </div>
+    <h4 style="margin:15px 0 10px 0;color:#b91c1c">💳 Payment Sources (One per line)</h4>
+    <textarea id="setExpenseSources" rows="4"></textarea>
+    <button class="btn-green" type="button" style="margin-top:12px;padding:8px;" onclick="saveCompanySettings()">💾 Save Configurations</button>
+  </div>
+</div>
+
+<!-- ================= 15. SUPER-ADMIN ================= -->
+<div class="card-box no-print" id="secSuperadmin" style="display:none">
+  <div class="sec-title"><h3 style="color:#7c3aed">👑 सुपर-एडमिन: क्लाइंट अकाउंट्स व स्विच पैनल</h3></div>
+  <table class="data-table">
+    <thead><tr><th>Client ID</th><th>Firm Name</th><th>Password</th><th class="no-print">Action</th></tr></thead>
+    <tbody id="tenantTableBody"></tbody>
+  </table>
+</div>
+
+<div id="generalPrintArea" class="no-print"></div>
+<div id="thermalPrintArea" class="no-print"></div>
+
+<script>
+function safeJSONParse(key, fallback) { try { var val = localStorage.getItem(key); return val ? JSON.parse(val) : fallback; } catch(e) { return fallback; } }
+
+var currentTenant = safeJSONParse('current_tenant_session', {
+  id: "MASTER",
+  name: "SHREE SAGAR ENTERPRISES",
+  role: "superadmin",
+  perms: ["sale","customer","vendor","stock","mfg","labour","purchase","order","expense","cab","history","report","dashboard","settings","superadmin"]
+});
+
+var tenantAccounts = safeJSONParse('master_saas_tenants', [
+  { id: "MASTER", name: "SHREE SAGAR ENTERPRISES", pass: "123456", perms: ["sale","customer","vendor","stock","mfg","labour","purchase","order","expense","cab","history","report","dashboard","settings","superadmin"] },
+  { id: "STUDIO", name: "SAGAR STUDIO", pass: "1234", perms: ["sale","customer","stock","labour","order","expense","history","settings"] }
+]);
+
+var defComp = {
+  name: "SHREE SAGAR ENTERPRISES", 
+  gst: "09AVEPM9133B1ZO", 
+  stateCode: "09", 
+  address: "HOUSE A-28, KAMLA COLONY, SHAMLI, U.P. 247776", 
+  email: "anuj.malik0@gmail.com", 
+  phone: "989773231", 
+  upi: "989773231@sbi", 
+  bName: "STATE BANK OF INDIA", bAc: "44317906112", bIfsc: "SBIN0010155", bBranch: "THANA BHAWAN",
+  expenseSources: "Cash In Hand\nSBI Bank UPI\nHDFC Credit Card\nRBL Credit Card\nLabour Wallet"
+};
+
+// Global Persistent Databases
+var invoiceDB = safeJSONParse('sse_invdb_v18', [
+  { invNo: "1", invDate: "06-10-2026", dateIso: "2026-10-06", custName: "M/s GALAXY ADVERTISERS", custGst: "05AQDPS8301F1Z1", taxableVal: 1498, grandTotal: "₹ 1768.00", status: "Active" }
+]);
+var parties = safeJSONParse('sse_p_v18', [
+  { name: "CASH SALE", address: "Local Counter, Shamli", phone: "9999999999", gst: "URP", stateCode: "09" },
+  { name: "M/s GALAXY ADVERTISERS", address: "Haridwar Colony, Haridwar", phone: "7906477784", gst: "05AQDPS8301F1Z1", stateCode: "05" }
+]);
+var vendorsDB = safeJSONParse('sse_venddb_v18', [
+  { name: "Supreme Chemicals Delhi", phone: "9811122233", gst: "07AAAAA1111A1Z5", stateCode: "07", address: "Khari Baoli, Delhi" }
+]);
+var inventory = safeJSONParse('sse_i_v18', [
+  { id: 1, type: "FG", name: "CASTO BOND FLEX ADHESIVE 15g", hsn: "3506", gst: 18, rate: 14.98, stock: 3000 },
+  { id: 2, type: "FG", name: "CASTO BOND SUPER ADHESIVE 50 gm", hsn: "3506", gst: 18, rate: 54.00, stock: 1500 }
+]);
+var labourDB = safeJSONParse('sse_labourdb_v18', [
+  { id: 1, name: "रामपाल", phone: "9897000000", wage: 500, advance: 0, days: 26, salary: 13000, balance: 13000 }
+]);
+var mfgLogs = safeJSONParse('sse_mfg_v18', [
+  { date: "2026-10-06", fg: "CASTO BOND 15g", qty: 1000, video: "" }
+]);
+var purchaseDB = safeJSONParse('sse_purdb_v18', [
+  { date: "2026-10-05", supplier: "Supreme Chemicals Delhi", billNo: "SUP-101", mode: "Credit", totalCost: 15000 }
+]);
+var poDB = safeJSONParse('sse_podb_v18', [
+  { date: "2026-10-06", vendor: "Supreme Chemicals Delhi", items: "Raw Bottles (500 Pcs)" }
+]);
+var expenseDB = safeJSONParse('sse_expdb_v18', [
+  { date: "2026-10-06", desc: "फैक्ट्री चाय व नाश्ता", amt: 120, source: "Cash In Hand" }
+]);
+var cabDB = safeJSONParse('sse_cabdb_v18', [
+  { date: "2026-10-06", platform: "Uber India (07AABCU9145Q1ZS)", driver: "रामपाल (UP 19 AT 7903)", earn: 2400, exp: 600, net: 1800 }
+]);
+var cabFleet = safeJSONParse('sse_cabfleet_v18', [
+  { name: "रामपाल", veh: "UP 19 AT 7903", phone: "989773231" }
+]);
+var companyProfile = safeJSONParse('sse_comp_v18', defComp);
+
+// --- DRAGGABLE BUTTONS LOGIC ---
+function makeDraggable(el) {
+  var p1 = 0, p2 = 0, p3 = 0, p4 = 0;
+  el.onmousedown = function(e) {
+    e.preventDefault(); p3 = e.clientX; p4 = e.clientY;
+    document.onmouseup = function() { document.onmouseup = null; document.onmousemove = null; };
+    document.onmousemove = function(e) {
+      e.preventDefault(); p1 = p3 - e.clientX; p2 = p4 - e.clientY; p3 = e.clientX; p4 = e.clientY;
+      el.style.top = (el.offsetTop - p2) + "px"; el.style.left = (el.offsetLeft - p1) + "px";
+    };
+  };
+  el.ontouchstart = function(e) {
+    var t = e.touches[0]; p3 = t.clientX; p4 = t.clientY;
+    document.ontouchend = function() { document.ontouchend = null; document.ontouchmove = null; };
+    document.ontouchmove = function(e) {
+      var t = e.touches[0]; p1 = p3 - t.clientX; p2 = p4 - t.clientY; p3 = t.clientX; p4 = t.clientY;
+      el.style.top = (el.offsetTop - p2) + "px"; el.style.left = (el.offsetLeft - p1) + "px";
+    };
+  };
+}
+
+// --- CASH SALE & MOBILE AUTO-SYNC (TAB / NEXT STEP LOGIC) ---
+function onCustNameInput(val) {
+  var p = parties.find(x => x.name.toLowerCase() === val.toLowerCase());
+  if(p) {
+    document.getElementById('ctlCustPhone').value = p.phone || '';
+    document.getElementById('custNameInput').value = p.name;
+    document.getElementById('custPhoneInput').value = p.phone || '';
+    document.getElementById('custAddressInput').value = p.address || '';
+    document.getElementById('custGstInput').value = p.gst || 'URP';
+    document.getElementById('custStateCodeInput').value = p.stateCode || '09';
+    document.getElementById('shipNameInput').value = p.name;
+    document.getElementById('shipAddressInput').value = p.address || '';
+  } else {
+    syncBillToShipToLive();
+  }
+  calculateTotal();
+}
+
+function onCustPhoneInput(val) {
+  var p = parties.find(x => x.phone && x.phone.includes(val.trim()));
+  if(p) {
+    document.getElementById('ctlCustName').value = p.name;
+    onCustNameInput(p.name);
+  } else {
+    syncBillToShipToLive();
+  }
+}
+
+function syncBillToShipToLive() {
+  var name = document.getElementById('ctlCustName').value.trim() || "CASH SALE";
+  var phone = document.getElementById('ctlCustPhone').value.trim();
+
+  document.getElementById('custNameInput').value = name;
+  document.getElementById('custPhoneInput').value = phone;
+  document.getElementById('shipNameInput').value = name;
+
+  if(!document.getElementById('custAddressInput').value.trim() || document.getElementById('custAddressInput').value === "Local Counter, Shamli") {
+    document.getElementById('custAddressInput').value = (name === "CASH SALE") ? "Local Counter, Shamli" : (name + ", Shamli");
+    document.getElementById('shipAddressInput').value = document.getElementById('custAddressInput').value;
+  }
+}
+
+// --- UNIVERSAL PRINT FOR SECTIONS ---
+function printSectionTable(wrapId, title) {
+  var content = document.getElementById(wrapId).innerHTML;
+  var pArea = document.getElementById('generalPrintArea');
+  pArea.innerHTML = '<div style="padding:15px"><h2 style="text-align:center;border-bottom:2px solid #000;padding-bottom:5px">' + companyProfile.name + '</h2><h3 style="text-align:center;color:#1e3a8a">' + title + '</h3>' + content + '</div>';
+  document.body.classList.add('printing-general');
+  setTimeout(function() { window.print(); document.body.classList.remove('printing-general'); pArea.innerHTML = ''; }, 200);
+}
+
+// --- UNIVERSAL EDIT ENGINE ---
+function openUniversalEditModal(type, index) {
+  var modal = document.getElementById('universalEditModal');
+  var title = document.getElementById('editModalTitle');
+  var container = document.getElementById('editFieldsContainer');
+  document.getElementById('editTargetType').value = type;
+  document.getElementById('editTargetIndex').value = index;
+  container.innerHTML = '';
+
+  if(type === 'customer') {
+    var c = parties[index];
+    title.innerText = "✏️ ग्राहक एडिट करें";
+    container.innerHTML = `
+      <label class="bold">नाम:</label><input type="text" id="uEd1" value="${c.name}">
+      <label class="bold">फ़ोन:</label><input type="text" id="uEd2" value="${c.phone||''}">
+      <label class="bold">GSTIN:</label><input type="text" id="uEd3" value="${c.gst||'URP'}">
+      <label class="bold">पता:</label><textarea id="uEd4" rows="2">${c.address||''}</textarea>
+    `;
+  } else if(type === 'vendor') {
+    var v = vendorsDB[index];
+    title.innerText = "✏️ वेंडर एडिट करें";
+    container.innerHTML = `
+      <label class="bold">वेंडर नाम:</label><input type="text" id="uEd1" value="${v.name}">
+      <label class="bold">फ़ोन:</label><input type="text" id="uEd2" value="${v.phone||''}">
+      <label class="bold">GSTIN:</label><input type="text" id="uEd3" value="${v.gst||''}">
+      <label class="bold">पता:</label><textarea id="uEd4" rows="2">${v.address||''}</textarea>
+    `;
+  } else if(type === 'stock') {
+    var s = inventory[index];
+    title.innerText = "✏️ इन्वेंट्री आइटम एडिट करें";
+    container.innerHTML = `
+      <label class="bold">आइटम नाम:</label><input type="text" id="uEd1" value="${s.name}">
+      <label class="bold">HSN:</label><input type="text" id="uEd2" value="${s.hsn||'3506'}">
+      <label class="bold">रेट (₹):</label><input type="number" id="uEd3" value="${s.rate}">
+      <label class="bold">स्टॉक मात्रा:</label><input type="number" id="uEd4" value="${s.stock}">
+    `;
+  } else if(type === 'mfg') {
+    var m = mfgLogs[index];
+    title.innerText = "✏️ प्रोडक्शन बैच एडिट करें";
+    container.innerHTML = `
+      <label class="bold">तारीख:</label><input type="date" id="uEd1" value="${m.date}">
+      <label class="bold">प्रोडक्ट नाम:</label><input type="text" id="uEd2" value="${m.fg}">
+      <label class="bold">मात्रा (Pcs):</label><input type="number" id="uEd3" value="${m.qty}">
+      <label class="bold">SOP Video URL:</label><input type="text" id="uEd4" value="${m.video||''}">
+    `;
+  } else if(type === 'labour') {
+    var l = labourDB[index];
+    title.innerText = "✏️ लेबर / वर्कर एडिट करें";
+    container.innerHTML = `
+      <label class="bold">वर्कर नाम:</label><input type="text" id="uEd1" value="${l.name}">
+      <label class="bold">फ़ोन:</label><input type="text" id="uEd2" value="${l.phone||''}">
+      <label class="bold">दैनिक वेतन (₹):</label><input type="number" id="uEd3" value="${l.wage}">
+      <label class="bold">एडवांस (₹):</label><input type="number" id="uEd4" value="${l.advance||0}">
+    `;
+  } else if(type === 'purchase') {
+    var pur = purchaseDB[index];
+    title.innerText = "✏️ सप्लायर परचेस बिल एडिट करें";
+    container.innerHTML = `
+      <label class="bold">तारीख:</label><input type="date" id="uEd1" value="${pur.date}">
+      <label class="bold">सप्लायर:</label><input type="text" id="uEd2" value="${pur.supplier}">
+      <label class="bold">बिल नं:</label><input type="text" id="uEd3" value="${pur.billNo}">
+      <label class="bold">कुल लागत (₹):</label><input type="number" id="uEd4" value="${pur.totalCost}">
+    `;
+  } else if(type === 'order') {
+    var po = poDB[index];
+    title.innerText = "✏️ PO ऑर्डर एडिट करें";
+    container.innerHTML = `
+      <label class="bold">तारीख:</label><input type="date" id="uEd1" value="${po.date}">
+      <label class="bold">वेंडर:</label><input type="text" id="uEd2" value="${po.vendor}">
+      <label class="bold">विवरण/आइटम्स:</label><input type="text" id="uEd3" value="${po.items}">
+    `;
+  } else if(type === 'expense') {
+    var ex = expenseDB[index];
+    title.innerText = "✏️ खर्चा एडिट करें";
+    container.innerHTML = `
+      <label class="bold">तारीख:</label><input type="date" id="uEd1" value="${ex.date}">
+      <label class="bold">खर्च विवरण:</label><input type="text" id="uEd2" value="${ex.desc}">
+      <label class="bold">रकम (₹):</label><input type="number" id="uEd3" value="${ex.amt}">
+      <label class="bold">पेमेंट सोर्स:</label><input type="text" id="uEd4" value="${ex.source}">
+    `;
+  } else if(type === 'cab') {
+    var cb = cabDB[index];
+    title.innerText = "✏️ कैब ट्रिप एडिट करें";
+    container.innerHTML = `
+      <label class="bold">तारीख:</label><input type="date" id="uEd1" value="${cb.date}">
+      <label class="bold">प्लेटफ़ॉर्म:</label><input type="text" id="uEd2" value="${cb.platform}">
+      <label class="bold">कमाई (₹):</label><input type="number" id="uEd3" value="${cb.earn}">
+      <label class="bold">खर्चा (₹):</label><input type="number" id="uEd4" value="${cb.exp}">
+    `;
+  } else if(type === 'history') {
+    var inv = invoiceDB[index];
+    title.innerText = "✏️ बिल डेटा एडिट करें";
+    container.innerHTML = `
+      <label class="bold">बिल नं:</label><input type="text" id="uEd1" value="${inv.invNo}">
+      <label class="bold">तारीख:</label><input type="text" id="uEd2" value="${inv.invDate}">
+      <label class="bold">ग्राहक नाम:</label><input type="text" id="uEd3" value="${inv.custName}">
+      <label class="bold">कुल रकम:</label><input type="text" id="uEd4" value="${inv.grandTotal}">
+    `;
+  }
+
+  modal.style.display = 'flex';
+}
+
+function saveUniversalEditedRecord() {
+  var type = document.getElementById('editTargetType').value;
+  var idx = parseInt(document.getElementById('editTargetIndex').value);
+  var v1 = document.getElementById('uEd1') ? document.getElementById('uEd1').value : '';
+  var v2 = document.getElementById('uEd2') ? document.getElementById('uEd2').value : '';
+  var v3 = document.getElementById('uEd3') ? document.getElementById('uEd3').value : '';
+  var v4 = document.getElementById('uEd4') ? document.getElementById('uEd4').value : '';
+
+  if(type === 'customer') {
+    parties[idx] = { name: v1, phone: v2, gst: v3, stateCode: "09", address: v4 };
+    localStorage.setItem('sse_p_v18', JSON.stringify(parties));
+    renderCustomerRegister(); renderCustomerDatalist();
+  } else if(type === 'vendor') {
+    vendorsDB[idx] = { name: v1, phone: v2, gst: v3, stateCode: "09", address: v4 };
+    localStorage.setItem('sse_venddb_v18', JSON.stringify(vendorsDB));
+    renderVendorRegister();
+  } else if(type === 'stock') {
+    inventory[idx].name = v1; inventory[idx].hsn = v2;
+    inventory[idx].rate = parseFloat(v3)||0; inventory[idx].stock = parseFloat(v4)||0;
+    localStorage.setItem('sse_i_v18', JSON.stringify(inventory));
+    renderStockRegister(); populateRowItemDropdowns();
+  } else if(type === 'mfg') {
+    mfgLogs[idx] = { date: v1, fg: v2, qty: parseInt(v3)||0, video: v4 };
+    localStorage.setItem('sse_mfg_v18', JSON.stringify(mfgLogs));
+    renderMfgLog();
+  } else if(type === 'labour') {
+    labourDB[idx].name = v1; labourDB[idx].phone = v2;
+    labourDB[idx].wage = parseFloat(v3)||500; labourDB[idx].advance = parseFloat(v4)||0;
+    localStorage.setItem('sse_labourdb_v18', JSON.stringify(labourDB));
+    renderLabourRegister();
+  } else if(type === 'purchase') {
+    purchaseDB[idx] = { date: v1, supplier: v2, billNo: v3, mode: "Credit", totalCost: parseFloat(v4)||0 };
+    localStorage.setItem('sse_purdb_v18', JSON.stringify(purchaseDB));
+    renderPurchaseHistory();
+  } else if(type === 'order') {
+    poDB[idx] = { date: v1, vendor: v2, items: v3 };
+    localStorage.setItem('sse_podb_v18', JSON.stringify(poDB));
+    renderPoHistory();
+  } else if(type === 'expense') {
+    expenseDB[idx] = { date: v1, desc: v2, amt: parseFloat(v3)||0, source: v4 };
+    localStorage.setItem('sse_expdb_v18', JSON.stringify(expenseDB));
+    renderExpenses();
+  } else if(type === 'cab') {
+    var earn = parseFloat(v3)||0, exp = parseFloat(v4)||0;
+    cabDB[idx].date = v1; cabDB[idx].platform = v2; cabDB[idx].earn = earn; cabDB[idx].exp = exp; cabDB[idx].net = earn - exp;
+    localStorage.setItem('sse_cabdb_v18', JSON.stringify(cabDB));
+    renderCabFleetUI();
+  } else if(type === 'history') {
+    invoiceDB[idx].invNo = v1; invoiceDB[idx].invDate = v2; invoiceDB[idx].custName = v3; invoiceDB[idx].grandTotal = v4;
+    localStorage.setItem('sse_invdb_v18', JSON.stringify(invoiceDB));
+    renderHistory(); generateGstReport();
+  }
+
+  document.getElementById('universalEditModal').style.display = 'none';
+  alert("✅ रिकॉर्ड सुरक्षित हुआ!");
+}
+
+// --- DRIVER FLEET & ROUTE WHATSAPP ---
+function syncDriverPhoneForDispatch() {
+  var sel = document.getElementById('cabDispatchDriverSelect');
+  var drv = cabFleet.find(d => sel.value.includes(d.name));
+  return drv ? drv.phone : "";
+}
+
+function sendRouteToDriverWhatsApp() {
+  var drvName = document.getElementById('cabDispatchDriverSelect').value;
+  var route = document.getElementById('cabRouteDetails').value.trim();
+  var time = document.getElementById('cabReportingTime').value.trim();
+  var drv = cabFleet.find(d => drvName.includes(d.name));
+
+  if(!route) return alert("कृपया रूट लोकेशन लिखें!");
+  var phone = drv ? drv.phone : "989773231";
+  var msg = encodeURIComponent(`नमस्ते ${drvName},\n\nआपकी नई ड्यूटी असाइन हुई है:\n📍 रूट: ${route}\n⏰ समय: ${time}\n\nगाड़ी तैयार रखें।\n- Shree Sagar Tour & Travels`);
+  window.open("https://wa.me/91" + phone + "?text=" + msg, "_blank");
+}
+
+// --- GSTR-1 DATE FILTERS & RESTORED SUMMARY ---
+function setGstrDates(range) {
+  var today = new Date(); var y = today.getFullYear(); var m = today.getMonth();
+  var fDate = "", tDate = "";
+  if(range === 'this_month') {
+      fDate = y + "-" + String(m+1).padStart(2,'0') + "-01";
+      var lastDay = new Date(y, m+1, 0); tDate = y + "-" + String(m+1).padStart(2,'0') + "-" + String(lastDay.getDate()).padStart(2,'0');
+  } else if(range === 'last_month') {
+      var prevM = m === 0 ? 11 : m-1; var prevY = m === 0 ? y-1 : y;
+      fDate = prevY + "-" + String(prevM+1).padStart(2,'0') + "-01";
+      var lastDay = new Date(prevY, prevM+1, 0); tDate = prevY + "-" + String(prevM+1).padStart(2,'0') + "-" + String(lastDay.getDate()).padStart(2,'0');
+  } else if(range === 'quarter') {
+      var qStart = Math.floor(m/3)*3;
+      fDate = y + "-" + String(qStart+1).padStart(2,'0') + "-01";
+      var lastDay = new Date(y, qStart+3, 0); tDate = y + "-" + String(qStart+3).padStart(2,'0') + "-" + String(lastDay.getDate()).padStart(2,'0');
+  } else if(range === 'fy') {
+      var startY = m <= 2 ? y-1 : y;
+      fDate = startY + "-04-01"; tDate = (startY+1) + "-03-31";
+  }
+  document.getElementById('gstrFrom').value = fDate; document.getElementById('gstrTo').value = tDate; generateGstReport();
+}
+
+function generateGstReport() {
+  var tb = document.getElementById('reportTableBody'); var tf = document.getElementById('reportTableFoot'); if(!tb) return; tb.innerHTML = '';
+  var fDate = document.getElementById('gstrFrom').value; var tDate = document.getElementById('gstrTo').value;
+  var sumTax = 0, sumC = 0, sumS = 0, sumTot = 0;
+
+  invoiceDB.forEach(inv => {
+    if(inv.status !== 'Cancelled') {
+      if(fDate && inv.dateIso < fDate) return; if(tDate && inv.dateIso > tDate) return;
+      var tax = parseFloat(inv.taxableVal)||0;
+      var tot = parseFloat(String(inv.grandTotal).replace(/[^0-9\.]/g, ''))||0;
+      var cgst = tax * 0.09, sgst = tax * 0.09;
+      sumTax += tax; sumC += cgst; sumS += sgst; sumTot += tot;
+
+      tb.innerHTML += `<tr><td>${inv.invNo}</td><td>${inv.invDate}</td><td>${inv.custName}</td><td>${inv.custGst||'URP'}</td><td class="text-right">₹ ${tax.toFixed(2)}</td><td class="text-right">₹ ${cgst.toFixed(2)}</td><td class="text-right">₹ ${sgst.toFixed(2)}</td><td class="text-right bold">₹ ${tot.toFixed(2)}</td></tr>`;
+    }
+  });
+
+  tf.innerHTML = `<tr><td colspan="4" class="text-right">TOTAL:</td><td class="text-right">₹ ${sumTax.toFixed(2)}</td><td class="text-right">₹ ${sumC.toFixed(2)}</td><td class="text-right">₹ ${sumS.toFixed(2)}</td><td class="text-right bold">₹ ${sumTot.toFixed(2)}</td></tr>`;
+}
+
+function exportGstrJSON() {
+  var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(invoiceDB));
+  var dl = document.createElement('a'); dl.setAttribute("href", dataStr); dl.setAttribute("download", "GSTR1_Export_" + new Date().toISOString().slice(0,10) + ".json"); dl.click();
+}
+
+// --- DATA REGISTERS RENDERING WITH EDIT & DELETE BUTTONS ---
+function renderCustomerRegister() {
+  var tb = document.getElementById('customerTableBody'); if(!tb) return; tb.innerHTML = '';
+  parties.forEach((p, i) => {
+    tb.innerHTML += `<tr><td>${i+1}</td><td class="bold">${p.name}</td><td>${p.gst||'URP'}</td><td>${p.phone||'-'}</td><td>${p.address||'-'}</td><td class="no-print"><button class="btn-amber" style="padding:2px 6px;margin-right:4px;" onclick="openUniversalEditModal('customer',${i})">✏️ Edit</button><button class="btn-danger" style="padding:2px 6px;" onclick="parties.splice(${i},1);localStorage.setItem('sse_p_v18',JSON.stringify(parties));renderCustomerRegister();">🗑️</button></td></tr>`;
+  });
+}
+function addNewCustomerAction() {
+  var n = document.getElementById('newCustName').value.trim(); if(!n) return alert("नाम लिखें!");
+  parties.push({ name: n, phone: document.getElementById('newCustPhone').value, gst: document.getElementById('newCustGst').value||'URP', stateCode: document.getElementById('newCustStateCode').value||'09', address: document.getElementById('newCustAddress').value });
+  localStorage.setItem('sse_p_v18', JSON.stringify(parties)); renderCustomerRegister(); renderCustomerDatalist(); alert("ग्राहक सुरक्षित हुआ!");
+}
+
+function renderVendorRegister() {
+  var tb = document.getElementById('vendorTableBody'); if(!tb) return; tb.innerHTML = '';
+  vendorsDB.forEach((v, i) => {
+    tb.innerHTML += `<tr><td>${i+1}</td><td class="bold">${v.name}</td><td>${v.phone||'-'}</td><td>${v.gst||'-'}</td><td>${v.address||'-'}</td><td class="no-print"><button class="btn-amber" style="padding:2px 6px;margin-right:4px;" onclick="openUniversalEditModal('vendor',${i})">✏️ Edit</button><button class="btn-danger" style="padding:2px 6px;" onclick="vendorsDB.splice(${i},1);localStorage.setItem('sse_venddb_v18',JSON.stringify(vendorsDB));renderVendorRegister();">🗑️</button></td></tr>`;
+  });
+  populatePoVendorDropdown();
+}
+function addNewVendorAction() {
+  var n = document.getElementById('newVendName').value.trim(); if(!n) return alert("वेंडर नाम लिखें!");
+  vendorsDB.push({ name: n, phone: document.getElementById('newVendPhone').value, gst: document.getElementById('newVendGst').value, stateCode: document.getElementById('newVendState').value||'09', address: document.getElementById('newVendAddress').value });
+  localStorage.setItem('sse_venddb_v18', JSON.stringify(vendorsDB)); renderVendorRegister(); alert("वेंडर सुरक्षित हुआ!");
+}
+
+function renderStockRegister() {
+  var tb = document.getElementById('editableInventoryBody'); var tf = document.getElementById('stockTableFoot'); if(!tb) return; tb.innerHTML = ''; var tot = 0;
+  inventory.forEach((it, i) => {
+    tot += it.stock;
+    tb.innerHTML += `<tr><td>${i+1}</td><td>${it.type}</td><td class="bold">${it.name}</td><td>${it.hsn}</td><td>₹ ${it.rate}</td><td>${it.stock}</td><td class="no-print"><button class="btn-amber" style="padding:2px 6px;margin-right:4px;" onclick="openUniversalEditModal('stock',${i})">✏️ Edit</button><button class="btn-danger" style="padding:2px 6px;" onclick="inventory.splice(${i},1);localStorage.setItem('sse_i_v18',JSON.stringify(inventory));renderStockRegister();">🗑️</button></td></tr>`;
+  });
+  tf.innerHTML = `<tr><td colspan="5" class="text-right">TOTAL STOCK:</td><td>${tot}</td><td class="no-print"></td></tr>`;
+}
+function addNewInventoryItem() {
+  var n = document.getElementById('newInvName').value.trim(); if(!n) return alert("नाम लिखें!");
+  inventory.push({ type: document.getElementById('newInvType').value, name: n, hsn: document.getElementById('newInvHsn').value, rate: parseFloat(document.getElementById('newInvRate').value)||0, stock: parseFloat(document.getElementById('newInvStock').value)||0 });
+  localStorage.setItem('sse_i_v18', JSON.stringify(inventory)); renderStockRegister(); populateRowItemDropdowns(); alert("आइटम सुरक्षित हुआ!");
+}
+
+function renderMfgLog() {
+  var tb = document.getElementById('mfgLogBody'); if(!tb) return; tb.innerHTML = '';
+  mfgLogs.forEach((m, i) => {
+    var vBtn = m.video ? `<button class="btn-amber" style="padding:2px 6px" onclick="previewFloatingVideo('${m.video}','${m.fg}')">▶ वीडियो</button>` : "-";
+    tb.innerHTML += `<tr><td>${m.date}</td><td class="bold">${m.fg}</td><td>${m.qty} Pcs</td><td class="text-center">${vBtn}</td><td class="no-print"><button class="btn-amber" style="padding:2px 6px;margin-right:4px;" onclick="openUniversalEditModal('mfg',${i})">✏️ Edit</button><button class="btn-danger" style="padding:2px 6px;" onclick="mfgLogs.splice(${i},1);localStorage.setItem('sse_mfg_v18',JSON.stringify(mfgLogs));renderMfgLog();">🗑️</button></td></tr>`;
+  });
+}
+function saveProductionEntry() {
+  var fg = document.getElementById('mfgFgItem').value.trim(); if(!fg) return alert("प्रोडक्ट नाम लिखें!");
+  mfgLogs.unshift({ date: document.getElementById('mfgDate').value, fg: fg, qty: parseInt(document.getElementById('mfgFgQty').value)||1000, video: document.getElementById('mfgVideoUrl').value.trim() });
+  localStorage.setItem('sse_mfg_v18', JSON.stringify(mfgLogs)); renderMfgLog(); alert("प्रोडक्शन सेव हुआ!");
+}
+
+function renderLabourRegister() {
+  var tb = document.getElementById('labourSummaryTableBody'); if(!tb) return; tb.innerHTML = '';
+  labourDB.forEach((l, i) => {
+    tb.innerHTML += `<tr><td>${i+1}</td><td class="bold">${l.name}</td><td>${l.phone}</td><td>₹ ${l.wage}</td><td class="text-right">${l.days||26}</td><td class="text-right bold">₹ ${l.salary||13000}</td><td class="text-right">₹ ${l.advance||0}</td><td class="text-right bold" style="color:#2563eb">₹ ${l.balance||13000}</td><td class="no-print"><button class="btn-amber" style="padding:2px 6px;margin-right:4px;" onclick="openUniversalEditModal('labour',${i})">✏️ Edit</button><button class="btn-danger" style="padding:2px 6px;" onclick="labourDB.splice(${i},1);localStorage.setItem('sse_labourdb_v18',JSON.stringify(labourDB));renderLabourRegister();">🗑️</button></td></tr>`;
+  });
+}
+function addNewLabourAction() {
+  var n = document.getElementById('labourName').value.trim(); if(!n) return alert("नाम लिखें!");
+  labourDB.push({ id: Date.now(), name: n, phone: document.getElementById('labourPhone').value, wage: parseFloat(document.getElementById('labourDailyWage').value)||500, advance: 0, days: 26, salary: 13000, balance: 13000 });
+  localStorage.setItem('sse_labourdb_v18', JSON.stringify(labourDB)); renderLabourRegister(); alert("लेबर सुरक्षित हुई!");
+}
+
+function renderPurchaseHistory() {
+  var tb = document.getElementById('purchaseHistoryBody'); if(!tb) return; tb.innerHTML = '';
+  purchaseDB.forEach((p, i) => {
+    tb.innerHTML += `<tr><td>${p.date}</td><td class="bold">${p.supplier}</td><td>${p.billNo}</td><td>${p.mode}</td><td class="text-right bold">₹ ${p.totalCost}</td><td class="no-print"><button class="btn-amber" style="padding:2px 6px;margin-right:4px;" onclick="openUniversalEditModal('purchase',${i})">✏️ Edit</button><button class="btn-danger" style="padding:2px 6px;" onclick="purchaseDB.splice(${i},1);localStorage.setItem('sse_purdb_v18',JSON.stringify(purchaseDB));renderPurchaseHistory();">🗑️</button></td></tr>`;
+  });
+}
+function savePurchaseAction() {
+  var sup = document.getElementById('purSupplier').value; if(!sup) return alert("सप्लायर चुनें!");
+  purchaseDB.unshift({ date: document.getElementById('purDate').value, supplier: sup, billNo: document.getElementById('purBillNo').value||'-', mode: document.getElementById('purPayMode').value, totalCost: parseFloat(document.getElementById('purAmount').value)||10000 });
+  localStorage.setItem('sse_purdb_v18', JSON.stringify(purchaseDB)); renderPurchaseHistory(); alert("परचेस सुरक्षित हुई!");
+}
+
+function renderPoHistory() {
+  var tb = document.getElementById('poHistoryBody'); if(!tb) return; tb.innerHTML = '';
+  poDB.forEach((p, i) => {
+    tb.innerHTML += `<tr><td>${p.date}</td><td class="bold">${p.vendor}</td><td>${p.items}</td><td class="no-print"><button class="btn-amber" style="padding:2px 6px;margin-right:4px;" onclick="openUniversalEditModal('order',${i})">✏️ Edit</button><button class="btn-danger" style="padding:2px 6px;" onclick="poDB.splice(${i},1);localStorage.setItem('sse_podb_v18',JSON.stringify(poDB));renderPoHistory();">🗑️</button></td></tr>`;
+  });
+}
+function savePurchaseOrder() {
+  poDB.unshift({ date: document.getElementById('poDate').value, vendor: document.getElementById('poVendorSelect').value, items: "Raw Materials PO" });
+  localStorage.setItem('sse_podb_v18', JSON.stringify(poDB)); renderPoHistory(); alert("PO सुरक्षित हुआ!");
+}
+function saveAndSendMultiplePO() { savePurchaseOrder(); var ph = document.getElementById('poVendorPhone').value; window.open("https://wa.me/91"+ph+"?text=Purchase Order from " + companyProfile.name, "_blank"); }
+
+function renderExpenses() {
+  loadExpenseSourcesToDropdown();
+  var tb = document.getElementById('expenseTableBody'); var tf = document.getElementById('expenseTableFoot'); if(!tb) return; tb.innerHTML = ''; var tot = 0;
+  expenseDB.forEach((e, i) => {
+    tot += e.amt;
+    tb.innerHTML += `<tr><td>${e.date}</td><td class="bold">${e.desc}</td><td><span style="background:#fee2e2;color:#991b1b;padding:2px 6px;border-radius:3px;font-weight:bold;">${e.source}</span></td><td class="text-right bold" style="color:#dc2626">₹ ${e.amt.toFixed(2)}</td><td class="no-print"><button class="btn-amber" style="padding:2px 6px;margin-right:4px;" onclick="openUniversalEditModal('expense',${i})">✏️ Edit</button><button class="btn-danger" style="padding:2px 6px;" onclick="expenseDB.splice(${i},1);localStorage.setItem('sse_expdb_v18',JSON.stringify(expenseDB));renderExpenses();">🗑️</button></td></tr>`;
+  });
+  tf.innerHTML = `<tr><td colspan="3" class="text-right">TOTAL:</td><td class="text-right bold" style="color:#dc2626">₹ ${tot.toFixed(2)}</td><td class="no-print"></td></tr>`;
+}
+function saveExpense() {
+  var amt = parseFloat(document.getElementById('expAmount').value)||0; if(amt<=0) return alert("रकम भरें!");
+  expenseDB.unshift({ date: document.getElementById('expDate').value, desc: document.getElementById('expDesc').value, amt: amt, source: document.getElementById('expPaymentSource').value });
+  localStorage.setItem('sse_expdb_v18', JSON.stringify(expenseDB)); renderExpenses(); alert("खर्चा सुरक्षित हुआ!");
+}
+
+function renderCabFleetUI() {
+  var drvSel = document.getElementById('cabDriverSelect');
+  var dispSel = document.getElementById('cabDispatchDriverSelect');
+  drvSel.innerHTML = ''; dispSel.innerHTML = '';
+  cabFleet.forEach(d => {
+    var opt = `<option value="${d.name} (${d.veh})">${d.name} (${d.veh})</option>`;
+    drvSel.innerHTML += opt; dispSel.innerHTML += opt;
+  });
+
+  var tb = document.getElementById('cabTableBody'); tb.innerHTML = '';
+  cabDB.forEach((c, i) => {
+    tb.innerHTML += `<tr><td>${c.date}</td><td class="bold">${c.platform}</td><td>${c.driver}</td><td class="text-right" style="color:#16a34a">₹ ${c.earn}</td><td class="text-right" style="color:#dc2626">₹ ${c.exp}</td><td class="text-right bold" style="color:#2563eb">₹ ${c.net}</td><td class="no-print"><button class="btn-amber" style="padding:2px 6px;margin-right:4px;" onclick="openUniversalEditModal('cab',${i})">✏️ Edit</button><button class="btn-danger" style="padding:2px 6px;" onclick="cabDB.splice(${i},1);localStorage.setItem('sse_cabdb_v18',JSON.stringify(cabDB));renderCabFleetUI();">🗑️</button></td></tr>`;
+  });
+}
+function addNewDriverToFleet() {
+  var n = document.getElementById('newDriverName').value.trim(); var v = document.getElementById('newDriverVeh').value.trim();
+  if(!n || !v) return alert("ड्राइवर नाम व गाड़ी नंबर लिखें!");
+  cabFleet.push({ name: n, veh: v, phone: document.getElementById('newDriverPhone').value||'989773231' });
+  localStorage.setItem('sse_cabfleet_v18', JSON.stringify(cabFleet)); renderCabFleetUI(); alert("ड्राइवर जुड़ गया!");
+}
+function saveCabLogEntry() {
+  var earn = parseFloat(document.getElementById('cabEarnings').value)||0;
+  var pSel = document.getElementById('cabPlatform'); var gst = pSel.options[pSel.selectedIndex].getAttribute('data-gst')||"-";
+  cabDB.unshift({ date: document.getElementById('cabDate').value, platform: pSel.value + " (" + gst + ")", driver: document.getElementById('cabDriverSelect').value, earn: earn, exp: 500, net: earn - 500 });
+  localStorage.setItem('sse_cabdb_v18', JSON.stringify(cabDB)); renderCabFleetUI(); alert("कैब एंट्री सुरक्षित हुई!");
+}
+
+function renderHistory() {
+  var tb = document.getElementById('historyBodyFull'); if(!tb) return; tb.innerHTML = '';
+  invoiceDB.forEach((inv, i) => {
+    tb.innerHTML += `<tr><td class="bold">INV-${inv.invNo}</td><td>${inv.invDate}</td><td class="bold">${inv.custName}</td><td class="text-right">₹ ${inv.taxableVal}</td><td class="text-right bold">${inv.grandTotal}</td><td>Active</td><td class="no-print"><button class="btn-amber" style="padding:2px 6px;margin-right:4px;" onclick="openUniversalEditModal('history',${i})">✏️ Edit</button><button class="btn-danger" style="padding:2px 6px;" onclick="invoiceDB.splice(${i},1);localStorage.setItem('sse_invdb_v18',JSON.stringify(invoiceDB));renderHistory();">🗑️</button></td></tr>`;
+  });
+}
+
+function renderDashboard() {
+  var s = 0, c = 0, e = 0;
+  invoiceDB.forEach(i => s += (parseFloat(i.taxableVal)||0));
+  cabDB.forEach(x => c += x.earn);
+  expenseDB.forEach(y => e += y.amt);
+  var net = (s + c) - e;
+  document.getElementById('dashTotalSales').innerText = "₹ " + s.toFixed(2);
+  document.getElementById('dashTotalCab').innerText = "₹ " + c.toFixed(2);
+  document.getElementById('dashTotalExp').innerText = "₹ " + e.toFixed(2);
+  document.getElementById('dashNetProfit').innerText = "₹ " + net.toFixed(2);
+  document.getElementById('barHeightSales').style.height = "70%";
+  document.getElementById('barHeightCab').style.height = "50%";
+  document.getElementById('barHeightExp').style.height = "30%";
+  document.getElementById('barHeightProfit').style.height = "60%";
+  document.getElementById('barValSales').innerText = "₹ " + Math.round(s);
+  document.getElementById('barValCab').innerText = "₹ " + Math.round(c);
+  document.getElementById('barValExp').innerText = "₹ " + Math.round(e);
+  document.getElementById('barValProfit').innerText = "₹ " + Math.round(net);
+}
+
+// --- CALCULATION & BILLING ENGINE ---
+function calculateTotal() {
+  var sum = 0, pcs = 0;
+  document.querySelectorAll('#itemsBody tr.item-row').forEach((r, i) => {
+    r.querySelector('.row-sl').innerText = i + 1;
+    var q = parseFloat(r.querySelector('.item-qty').value)||0;
+    var rate = parseFloat(r.querySelector('.item-rate').value)||0;
+    var d = parseFloat(r.querySelector('.item-disc').value)||0;
+    var amt = (q * rate) * (1 - d/100);
+    r.querySelector('.item-amt').innerText = amt.toFixed(2);
+    sum += amt; pcs += q;
+  });
+  document.getElementById('taxableAmount').innerText = sum.toFixed(2);
+  var gst = sum * 0.18;
+  document.getElementById('cgstAmount').innerText = (gst/2).toFixed(2);
+  document.getElementById('sgstAmount').innerText = (gst/2).toFixed(2);
+  var grand = Math.round(sum + gst);
+  document.getElementById('roundOff').innerText = (grand - (sum + gst)).toFixed(2);
+  document.getElementById('payableAmount').innerText = "₹ " + grand.toFixed(2);
+
+  var upi = companyProfile.upi || "989773231@sbi";
+  if(upi && grand > 0) {
+    document.getElementById('upiQrCode').src = "https://api.qrserver.com/v1/create-qr-code/?size=100x100&margin=0&data=" + encodeURIComponent("upi://pay?pa=" + upi + "&pn=" + encodeURIComponent(companyProfile.name) + "&am=" + grand.toFixed(2));
+    document.getElementById('upiQrCode').style.display = "inline-block";
+    document.getElementById('qrPayAmt').innerText = grand.toFixed(2);
+  }
+}
+
+function syncFromControls() { document.getElementById('invNoInput').value = document.getElementById('ctlInvNo').value; calculateTotal(); }
+function syncDateFromControl() { document.getElementById('invDateInput').value = document.getElementById('ctlDate').value; calculateTotal(); }
+function syncSlip() {
+  document.getElementById('printRowEway').style.display = document.getElementById('chkShowEway').checked ? '' : 'none';
+  document.getElementById('printRowVeh').style.display = document.getElementById('chkShowVeh').checked ? '' : 'none';
+}
+function updateCopyHeader() {
+  var cp = document.getElementById('ctlCopyPrint').value; var h = document.getElementById('hdrRecip');
+  if(cp === 'trans') h.innerText = "TAX INVOICE - DUPLICATE FOR TRANSPORTER";
+  else if(cp === 'supp') h.innerText = "TAX INVOICE - TRIPLICATE FOR SUPPLIER";
+  else h.innerText = "TAX INVOICE - ORIGINAL FOR RECIPIENT";
+}
+function resetNewInvoiceForm() {
+  document.getElementById('ctlInvNo').value = invoiceDB.length + 1;
+  document.getElementById('ctlCustName').value = 'CASH SALE';
+  document.getElementById('ctlCustPhone').value = '';
+  syncBillToShipToLive(); syncFromControls();
+}
+function addNewRow() {
+  var tr = document.createElement('tr'); tr.className = 'item-row';
+  tr.innerHTML = '<td class="text-center row-sl">#</td><td><select class="no-print inv-item-select" onchange="onSelectItemFromInv(this)" style="margin-bottom:2px"></select><input type="text" class="item-desc" style="font-weight:bold;width:100%"></td><td class="text-center"><input type="text" class="item-hsn" value="3506" style="text-align:center"></td><td class="text-center"><input type="number" class="item-qty" value="100" oninput="calculateTotal()" style="text-align:center"></td><td class="text-center"><input type="number" class="item-rate" value="14.98" step="0.01" oninput="calculateTotal()" style="text-align:center"></td><td class="text-center"><input type="number" class="item-disc" value="0" step="0.1" oninput="calculateTotal()" style="text-align:center"></td><td class="text-right bold item-amt">0.00</td><td class="no-print text-center"><button class="btn-danger restricted-btn" type="button" onclick="deleteRow(this)">✕</button></td>';
+  document.getElementById('itemsBody').appendChild(tr); populateRowItemDropdowns();
+}
+function deleteRow(btn) { btn.closest('tr').remove(); calculateTotal(); }
+
+function populateRowItemDropdowns() {
+  document.querySelectorAll('.inv-item-select').forEach(sel => {
+    sel.innerHTML = '<option value="">-- चुनें --</option>';
+    inventory.forEach(i => sel.innerHTML += `<option value="${i.name}" data-rate="${i.rate}" data-hsn="${i.hsn}">${i.name}</option>`);
+  });
+}
+function onSelectItemFromInv(sel) {
+  var opt = sel.options[sel.selectedIndex]; var row = sel.closest('tr');
+  if(opt.value) { row.querySelector('.item-desc').value = opt.value; row.querySelector('.item-hsn').value = opt.getAttribute('data-hsn'); row.querySelector('.item-rate').value = opt.getAttribute('data-rate'); calculateTotal(); }
+}
+function renderCustomerDatalist() {
+  var dl = document.getElementById('customerListOptions'); dl.innerHTML = ''; parties.forEach(p => dl.innerHTML += `<option value="${p.name}">`);
+}
+function populatePoVendorDropdown() {
+  var sel = document.getElementById('poVendorSelect'); if(!sel) return; sel.innerHTML = '<option value="">-- Select Vendor --</option>'; vendorsDB.forEach(v => sel.innerHTML += `<option value="${v.name}">${v.name}</option>`);
+  var pSel = document.getElementById('purSupplier'); if(pSel) { pSel.innerHTML = '<option value="">-- Select Supplier --</option>'; vendorsDB.forEach(v => pSel.innerHTML += `<option value="${v.name}">${v.name}</option>`); }
+}
+function onPoVendorChange(sel) { var v = vendorsDB.find(x => x.name === sel.value); if(v && v.phone) document.getElementById('poVendorPhone').value = v.phone; }
+
+function saveInvoiceToDB(alertUser) {
+  invoiceDB.unshift({
+    invNo: document.getElementById('invNoInput').value,
+    invDate: document.getElementById('invDateInput').value,
+    dateIso: document.getElementById('ctlDate').value,
+    custName: document.getElementById('custNameInput').value||"CASH SALE",
+    custGst: document.getElementById('custGstInput').value||"URP",
+    taxableVal: parseFloat(document.getElementById('taxableAmount').innerText),
+    grandTotal: document.getElementById('payableAmount').innerText
+  });
+  localStorage.setItem('sse_invdb_v18', JSON.stringify(invoiceDB));
+  renderHistory(); generateGstReport();
+  if(alertUser) alert("✅ बिल सुरक्षित हुआ!");
+}
+
+// --- SETUP & PROFILE ---
+function loadExpenseSourcesToDropdown() {
+  var s = document.getElementById('expPaymentSource'); if(!s) return; s.innerHTML = '';
+  (companyProfile.expenseSources||"Cash In Hand").split('\n').forEach(x => { if(x.trim()) s.innerHTML += `<option>${x.trim()}</option>`; });
+}
+function loadCompanyProfileToUI() {
+  document.getElementById('setCompName').value = companyProfile.name;
+  document.getElementById('setCompGst').value = companyProfile.gst;
+  document.getElementById('setCompPhone').value = companyProfile.phone;
+  document.getElementById('setCompAddress').value = companyProfile.address;
+  document.getElementById('setUpiId').value = companyProfile.upi;
+  document.getElementById('setExpenseSources').value = companyProfile.expenseSources;
+  document.getElementById('printCompName').innerText = companyProfile.name;
+  document.getElementById('printCompGst').innerText = companyProfile.gst;
+  document.getElementById('printCompPhone').innerText = companyProfile.phone;
+  document.getElementById('printCompAddress').innerText = companyProfile.address;
+  document.getElementById('printSignComp').innerText = "For " + companyProfile.name;
+}
+function saveCompanySettings() {
+  companyProfile.name = document.getElementById('setCompName').value || companyProfile.name;
+  companyProfile.gst = document.getElementById('setCompGst').value || companyProfile.gst;
+  companyProfile.phone = document.getElementById('setCompPhone').value || companyProfile.phone;
+  companyProfile.address = document.getElementById('setCompAddress').value || companyProfile.address;
+  companyProfile.upi = document.getElementById('setUpiId').value || companyProfile.upi;
+  companyProfile.expenseSources = document.getElementById('setExpenseSources').value;
+  localStorage.setItem('sse_comp_v18', JSON.stringify(companyProfile));
+  loadCompanyProfileToUI(); alert("सेटिंग्स सुरक्षित हुईं!");
+}
+
+// --- LOGIN & LOGOUT / TENANT SWITCH ---
+function logoutUser() {
+  localStorage.removeItem('current_tenant_session');
+  document.getElementById('passwordModal').style.display = 'flex';
+  document.getElementById('loginPassInput').value = '';
+}
+function verifyTenantLogin() {
+  var shopId = document.getElementById('loginShopIdInput').value.trim().toUpperCase();
+  var pass = document.getElementById('loginPassInput').value.trim();
+  var tenant = tenantAccounts.find(t => t.id === shopId && t.pass === pass);
+  if(!tenant) return alert("❌ गलत क्लाइंट आईडी या पासवर्ड!");
+
+  currentTenant = { id: tenant.id, name: tenant.name, perms: tenant.perms, role: (tenant.id === "MASTER" ? "superadmin" : "tenant") };
+  localStorage.setItem('current_tenant_session', JSON.stringify(currentTenant));
+  document.getElementById('passwordModal').style.display = 'none';
+  location.reload();
+}
+function renderTenantAccountsTable() {
+  var tb = document.getElementById('tenantTableBody'); tb.innerHTML = '';
+  tenantAccounts.forEach(t => {
+    tb.innerHTML += `<tr><td class="bold">${t.id}</td><td>${t.name}</td><td>${t.pass}</td><td class="no-print"><button class="btn-blue" onclick="currentTenant={id:'${t.id}',name:'${t.name}',perms:${JSON.stringify(t.perms)},role:'${t.id==='MASTER'?'superadmin':'tenant'}'};localStorage.setItem('current_tenant_session',JSON.stringify(currentTenant));location.reload();">⚙️ Switch</button></td></tr>`;
+  });
+}
+
+// --- DRAGGABLE & VIDEO WINDOW UTILITIES ---
+function previewFloatingVideo(url, title) {
+  if(!url) return alert("URL डालें!");
+  var m = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
+  if(!m || m[2].length != 11) return alert("अमान्य YouTube लिंक!");
+  document.getElementById('videoWindowTitle').innerText = "🎬 SOP: " + (title||"वीडियो");
+  document.getElementById('floatingVideoIframe').src = "https://www.youtube-nocookie.com/embed/" + m[2] + "?autoplay=1";
+  document.getElementById('floatingVideoWindow').style.display = "flex";
+}
+function closeFloatingVideo() { document.getElementById('floatingVideoIframe').src = ""; document.getElementById('floatingVideoWindow').style.display = "none"; }
+
+function toggleHelpBot() { var b = document.getElementById('helpBotModal'); b.style.display = (b.style.display === 'flex') ? 'none' : 'flex'; }
+function sendHelpQuery() {
+  var inp = document.getElementById('botInputText'); var q = inp.value.trim(); if(!q) return;
+  document.getElementById('botChatArea').innerHTML += `<div class="bot-msg user">${q}</div>`; inp.value = '';
+  setTimeout(() => { document.getElementById('botChatArea').innerHTML += `<div class="bot-msg ai">सहायता: बिलिंग, स्टॉक, वेंडर, कैब व गेट-पास सिस्टम सक्रिय है।</div>`; }, 300);
+}
+
+var voiceRec = null;
+function toggleVoiceRecording() {
+  var Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!Speech) return alert("Chrome इस्तेमाल करें!");
+  if(voiceRec) { voiceRec.stop(); voiceRec = null; document.getElementById('floatingMicBtn').classList.remove('listening'); return; }
+  voiceRec = new Speech(); voiceRec.lang = 'hi-IN';
+  document.getElementById('floatingMicBtn').classList.add('listening');
+  document.getElementById('voiceReviewBar').style.display = 'flex';
+  voiceRec.onresult = function(e) { document.getElementById('liveTranscriptInput').value = e.results[0][0].transcript; };
+  voiceRec.start();
+}
+function pauseVoice() { if(voiceRec) { voiceRec.stop(); voiceRec = null; } document.getElementById('floatingMicBtn').classList.remove('listening'); }
+function closeVoiceReview() { pauseVoice(); document.getElementById('voiceReviewBar').style.display = 'none'; }
+function confirmAndExecuteCommand() {
+  var cmd = document.getElementById('liveTranscriptInput').value.toLowerCase();
+  closeVoiceReview();
+  if(cmd.includes("बिल") || cmd.includes("print")) { switchSection('sale'); setTimeout(() => executePrint('bill'), 300); }
+  else if(cmd.includes("स्टॉक") || cmd.includes("इन्वेंट्री")) switchSection('stock');
+  else if(cmd.includes("खर्चा") || cmd.includes("expense")) switchSection('expense');
+  else alert("कमांड मिली: " + cmd);
+}
+
+// Initial Bootstrapper
+window.onload = function() {
+  var today = new Date().toISOString().split('T')[0];
+  ['ctlDate','expDate','cabDate','purDate','mfgDate','poDate'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).value = today; });
+  document.getElementById('invDateInput').value = today.split('-').reverse().join('-');
+
+  makeDraggable(document.getElementById('floatingMicBtn'));
+  makeDraggable(document.getElementById('floatingBotBtn'));
+  makeDraggable(document.getElementById('floatingVideoHeader').parentElement);
+
+  document.getElementById('activeTenantNameDisplay').innerText = currentTenant.name + " (" + currentTenant.id + ")";
+  
+  loadCompanyProfileToUI();
+  populateRowItemDropdowns();
+  renderCustomerDatalist();
+  switchSection('sale');
+  syncBillToShipToLive();
+  syncSlip();
+  calculateTotal();
+  setGstrDates('this_month');
+};
+</script>
+</body>
+</html>
