@@ -1,0 +1,45 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+
+    - name: Install Cordova
+      run: npm install -g cordova
+
+    - name: Create Cordova Project
+      run: |
+        cordova create myApp com.example.invoice InvoiceApp
+        cd myApp
+        cordova platform add android@12.0.0
+
+    - name: Copy HTML Files
+      run: |
+        rm -rf myApp/www/*
+        cp index.html myApp/www/ 2>/dev/null || true
+        cp -r css js images myApp/www/ 2>/dev/null || true
+
+    - name: Build Android APK
+      run: |
+        cd myApp
+        cordova build android --release
+
+    - name: Upload APK File
+      uses: actions/upload-artifact@v3
+      with:
+        name: app-release-apk
+        path: myApp/platforms/android/app/build/outputs/apk/release/
+        
